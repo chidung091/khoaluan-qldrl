@@ -33,9 +33,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            sudo -s
-            $${{ secrets.PASSWORD }}
             cd ~/khoaluan-qldrl
-            cp .env.example .env
-            git pull origin master
-            yarn start:up:prod
+            sudo cp .env.example .env
+            sudo git pull origin master
+            sudo yarn start:up:prod
