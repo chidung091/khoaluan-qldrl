@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: point-rating-system
     ports:
-      - 3304:3004
+      - 3004:3004
     volumes:
       - service:/di
     depends_on:
