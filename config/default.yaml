@@ -3,7 +3,7 @@ service:
   name: api-ratings
   description:
   baseUrl: /api/
-  docsBaseUrl: /api/ratings/docs
+  docsBaseUrl: /api/docs
   apiVersion: 0.1.0
   appVersion: 0.1.0
   basicAuthPassword: admin
