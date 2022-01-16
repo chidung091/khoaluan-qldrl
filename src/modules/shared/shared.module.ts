@@ -1,5 +1,5 @@
-import { Global, Module } from '@nestjs/common';
-import { ConfigService, HttpUtilsService } from './services';
+import { Global, Module } from '@nestjs/common'
+import { ConfigService, HttpUtilsService } from './services'
 
 @Global()
 @Module({
