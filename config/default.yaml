@@ -1,0 +1,28 @@
+# Default config
+service:
+  name: api-ratings
+  description:
+  baseUrl: /api/
+  docsBaseUrl: /api/ratings/docs
+  apiVersion: 0.1.0
+  appVersion: 0.1.0
+  basicAuthPassword: admin
+
+externalServices:
+  auth: https://api.dev.logistika.com.my/api/authenticate
+
+server:
+  host: 127.0.0.1
+  port: 3004
+  hostname: 127.0.0.1:3004
+
+mongodb:
+  maxTimeMS: 5000
+  debug: true
+
+logger:
+  level: info
+  logstash: false
+  hostname: logstash
+  port: 5000
+  enabled: true

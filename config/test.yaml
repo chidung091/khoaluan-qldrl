@@ -1,0 +1,50 @@
+# Config for NODE_ENV=test environment
+# Default config
+service:
+  name: api-billings
+  description:
+  baseUrl: /api/billings
+  docsBaseUrl: /docs/billings
+  apiVersion: 0.1.0
+  appVersion: 0.1.0
+
+server:
+  port: 3000
+  host: localhost
+  hostname:
+  cors:
+    allowedHeaders: "authorization,content-type"
+    exposedHeaders: "authorization,x-page,x-per-page,x-pages-count,x-total-count,x-next-page,x-response-time,x-request-id"
+
+logger:
+  level: info
+  logstash: false
+  hostname: logstash
+  port: 5000
+  enabled: false
+
+mongodb:
+  uri: mongodb://127.0.0.1:27017/api-billings
+
+centralizedLogger:
+  name: api-billings-logger
+  maskConfidential: false
+  maskKeys:
+    - pin
+    - newPin
+    - password
+  exitOnError: false
+  enableConsole: true
+  enableInternalLog: true
+  enableCwl: false
+  enableLogzio: false
+  cwl:
+    logGroupName: api-billings-local
+    awsConfig:
+      region: ap-southeast-1
+    submissionInterval: 2000
+    submissionRetryCount: 1
+    batchSize: 20
+  logzio:
+
+backendAuthToken:

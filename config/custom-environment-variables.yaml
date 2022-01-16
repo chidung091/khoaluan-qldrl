@@ -1,0 +1,28 @@
+service:
+  name: SERVICE_NAME
+  baseUrl: SERVICE_BASE_URL
+  docsBaseUrl: SERVICE_DOCS_BASE_URL
+  apiVersion: SERVICE_API_VERSION
+  appVersion: SERVICE_APP_VERSION
+  basicAuthPassword: BASIC_AUTH_PASSWORD
+
+dashboardURL: SENDER_DASHBOARD_URL
+
+server:
+  host: SERVER_HOST
+  port: SERVER_PORT
+  hostname: SERVER_HOSTNAME
+
+mongodb:
+  uri: MONGODB_URI
+
+tigersheet:
+  env: TIGERSHEET_ENV
+  token: TIGERSHEET_AUTH_TOKEN
+
+logger:
+  level: LOGGER_LEVEL
+  enabled: LOGGER_ENABLED
+
+externalServices:
+  auth: AUTH_SVC_ENDPOINT
