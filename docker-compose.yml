@@ -5,30 +5,30 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ${BACK_CONTAINER_NAME}
+    container_name: point-rating-system
     ports:
-      - ${PORT}:3003
+      - 3304:3010
     volumes:
-      - service:/payment
+      - service:/di
     depends_on:
-      - mysql
+      - mongodb
     networks:
-      - point-training-network
+      - point-rating-network
   mongodb:
-    container_name: ${MONGO_CONTAINER_NAME}
-    image: mongo:4.2
+    container_name: mongo_rating
+    image: mongo
     environment:
-      MONGO_INITDB_ROOT_USERNAME: $MONGO_USERNAME
-      MONGO_INITDB_ROOT_PASSWORD: $MONGO_PASSWORD
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
     ports:
-      - ${MONGO_PORT}:27017
+      - 3307:27017
     volumes:
-      - db-data-order:/data/db
+      - db-data-rating:/data/db
     networks:
-      - elearning-network
+      - point-rating-network
 volumes:
-  mongo_data:
+  db-data-rating:
   service:
 networks:
-  point-training-network:
-    name: ${NETWORK_NAME}
+  point-rating-network:
+    name: point-rating-network
