@@ -28,11 +28,13 @@ jobs:
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
         with:
-          host: nvcd.xyz
-          username: chidung
-          password: dungboy123
-          port: 333
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
           script: |
+            sudo -s
+            $${{ secrets.PASSWORD }}
             cd ~/khoaluan-qldrl
             cp .env.example .env
             git pull origin master
