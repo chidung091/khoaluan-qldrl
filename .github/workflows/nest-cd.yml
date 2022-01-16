@@ -33,7 +33,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script:
-            cd khoaluan-qldrl
+            cd ~/khoaluan-qldrl
             cp .env.example .env
             git pull origin master
             yarn start:up:prod
