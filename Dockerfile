@@ -6,6 +6,6 @@ WORKDIR /home/node
 
 COPY ./ .
 
-RUN yarn install && yarn run build && cp .env.production .env
+RUN yarn install && yarn run build
 
 CMD ["node", "dist/main.js"]

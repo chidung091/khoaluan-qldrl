@@ -16,5 +16,5 @@ services:
 volumes:
   db-data-rating:
 networks:
-  point-training-network:
-    name: ${NETWORK_NAME}
+  point-rating-network:
+    name: point-rating-network-dev

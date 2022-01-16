@@ -26,7 +26,6 @@ async function bootstrap() {
     .enableCors()
 
   setUpSwagger(app, configService)
-  console.log(configService.mongoConfig.uri)
   await app.listen(configService.appConfig.port)
 }
 

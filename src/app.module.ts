@@ -3,15 +3,19 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { SharedModule } from './modules/shared/shared.module'
 import { AutomapperModule } from '@automapper/nestjs'
 import { classes } from '@automapper/classes'
-import { DATABASE_URI } from './config/secrets'
+import { ENV, MONGO_URI } from './config/secrets'
+import { ConfigModule } from '@nestjs/config'
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: !ENV ? '.env' : `.env.${ENV}`,
+    }),
+    MongooseModule.forRoot(MONGO_URI),
     AutomapperModule.forRoot({
       options: [{ name: 'mapper', pluginInitializer: classes }],
       singular: true,
     }),
-    MongooseModule.forRoot(DATABASE_URI),
     SharedModule,
   ],
 })

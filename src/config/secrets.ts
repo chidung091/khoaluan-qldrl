@@ -17,5 +17,6 @@ const MONGO_PORT = getEnv('MONGO_PORT')
 const MONGO_HOST = getEnv('MONGO_HOST')
 export const MONGO_DB = getEnv('MONGO_DB')
 export const DATABASE_URI = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`
+export const MONGO_URI = getEnv('MONGODB_URI')
 
 export const PAYMENT_SERVICE = getEnv('PAYMENT_SERVICE')
