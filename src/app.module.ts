@@ -1,10 +1,9 @@
-import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { ConfigService } from './modules/shared/services';
-import { SharedModule } from './modules/shared/shared.module';
-import { UserMiddleware } from './middleware';
-import { AutomapperModule } from '@automapper/nestjs';
-import { classes } from '@automapper/classes';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common'
+import { MongooseModule } from '@nestjs/mongoose'
+import { ConfigService } from './modules/shared/services'
+import { SharedModule } from './modules/shared/shared.module'
+import { AutomapperModule } from '@automapper/nestjs'
+import { classes } from '@automapper/classes'
 
 @Module({
   imports: [
@@ -14,17 +13,11 @@ import { classes } from '@automapper/classes';
     }),
     MongooseModule.forRootAsync({
       useFactory(configService: ConfigService) {
-        return configService.mongoConfig;
+        return configService.mongoConfig
       },
       inject: [ConfigService],
     }),
     SharedModule,
   ],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(UserMiddleware)
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
-  }
-}
+export class AppModule {}
