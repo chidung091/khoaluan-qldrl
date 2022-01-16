@@ -2,19 +2,19 @@ version: "3.7"
 
 services:
   mongodb:
-    container_name: ${MONGO_CONTAINER_NAME}
-    image: mongo:4.2
+    container_name: mongo_rating
+    image: mongo
     environment:
-      MONGO_INITDB_ROOT_USERNAME: $MONGO_USERNAME
-      MONGO_INITDB_ROOT_PASSWORD: $MONGO_PASSWORD
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
     ports:
-      - ${MONGO_PORT}:27017
+      - 3307:27017
     volumes:
-      - db-data-order:/data/db
+      - db-data-rating:/data/db
     networks:
-      - elearning-network
+      - point-rating-network
 volumes:
-  db-data-order:
+  db-data-rating:
 networks:
   point-training-network:
     name: ${NETWORK_NAME}
