@@ -37,4 +37,3 @@ jobs:
             cp .env.example .env
             git pull origin master
             yarn start:up:prod
-          
