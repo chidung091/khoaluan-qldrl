@@ -32,7 +32,7 @@ jobs:
           username: chidung
           password: dungboy123
           port: 333
-          script:
+          script: |
             cd ~/khoaluan-qldrl
             cp .env.example .env
             git pull origin master
