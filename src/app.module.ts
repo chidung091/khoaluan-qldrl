@@ -6,6 +6,8 @@ import { classes } from '@automapper/classes'
 import { ENV, MONGO_URI } from './config/secrets'
 import { ConfigModule } from '@nestjs/config'
 import { ApikeyMiddleware } from './middlewares/apikey.middleware'
+import { WebhookModule } from './modules/webhook/webhook.module'
+import { ClassModule } from './modules/class/class.module'
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { ApikeyMiddleware } from './middlewares/apikey.middleware'
       singular: true,
     }),
     SharedModule,
+    WebhookModule,
+    ClassModule,
   ],
 })
 export class AppModule {

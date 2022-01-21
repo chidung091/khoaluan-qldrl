@@ -1,8 +1,5 @@
 import { Injectable } from '@nestjs/common'
 import axios from 'axios'
-import fetch from 'node-fetch'
-import { API_URLS } from 'src/common/constant'
-import { ContextProvider } from '../providers'
 import { ConfigService } from './config.service'
 
 export enum ApiMethod {
