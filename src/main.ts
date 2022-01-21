@@ -5,17 +5,15 @@ import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { HttpExceptionFilter } from './filters'
-import { ConfigService } from './modules/shared/services'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import helmet from 'helmet'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
-  const configService = app.get(ConfigService)
 
   app
     .use(helmet())
-    .setGlobalPrefix(configService.serviceBaseUrl)
+    .setGlobalPrefix('/api')
     .useGlobalPipes(
       new ValidationPipe({
         transform: true,
@@ -25,11 +23,11 @@ async function bootstrap() {
     .useGlobalFilters(new HttpExceptionFilter())
     .enableCors()
 
-  setUpSwagger(app, configService)
-  await app.listen(configService.appConfig.port)
+  setUpSwagger(app)
+  await app.listen(3004)
 }
 
-function setUpSwagger(app: INestApplication, configService: ConfigService) {
+function setUpSwagger(app: INestApplication) {
   const options = new DocumentBuilder()
     .setTitle('Point Ratings System')
     .setDescription(
@@ -37,13 +35,13 @@ function setUpSwagger(app: INestApplication, configService: ConfigService) {
     Terms:\n
     - Internal: only available for other services in Thanh Huyen system.`,
     )
-    .setVersion(configService.serviceConfig.apiVersion)
+    .setVersion('0.1.2')
     .addBearerAuth()
     .build()
 
   const document = SwaggerModule.createDocument(app, options)
 
-  SwaggerModule.setup(configService.serviceConfig.docBaseUrl, app, document, {
+  SwaggerModule.setup('/api/docs', app, document, {
     swaggerOptions: {
       displayOperationId: true,
     },
