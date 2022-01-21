@@ -47,7 +47,7 @@ function setUpSwagger(app: INestApplication, configService: ConfigService) {
     swaggerOptions: {
       displayOperationId: true,
     },
-    customSiteTitle: 'Logistika Pricing API',
+    customSiteTitle: 'Point Ratings System',
   })
 }
 

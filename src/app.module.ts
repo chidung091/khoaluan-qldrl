@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common'
+import { MiddlewareConsumer, Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 import { SharedModule } from './modules/shared/shared.module'
 import { AutomapperModule } from '@automapper/nestjs'
 import { classes } from '@automapper/classes'
 import { ENV, MONGO_URI } from './config/secrets'
 import { ConfigModule } from '@nestjs/config'
+import { ApikeyMiddleware } from './middlewares/apikey.middleware'
 
 @Module({
   imports: [
@@ -19,4 +20,8 @@ import { ConfigModule } from '@nestjs/config'
     SharedModule,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ApikeyMiddleware).forRoutes('/webhook/')
+  }
+}
