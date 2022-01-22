@@ -6,7 +6,7 @@ export const getEnv = (key: string): string => {
   return process.env[key]
 }
 export const ENV = process.env.NODE_ENV
-export const PORT = process.env.ORDER_PORT
+export const PORT = process.env.PORT
 // JWT
 export const JWT_SECRET = process.env.JWT_SECRET
 export const JWT_EXPIRATION_TIME = process.env.JWT_EXPIRATION_TIME

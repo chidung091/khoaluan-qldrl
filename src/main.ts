@@ -7,7 +7,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { HttpExceptionFilter } from './filters'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import helmet from 'helmet'
-import { PORT } from './config/secrets'
+import { ENV, PORT } from './config/secrets'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -25,6 +25,7 @@ async function bootstrap() {
     .enableCors()
 
   setUpSwagger(app)
+  console.log(ENV)
   console.log(PORT)
   await app.listen(PORT)
 }
