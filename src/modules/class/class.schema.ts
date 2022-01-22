@@ -11,8 +11,16 @@ export type ClassDocument = Class & Document
 
 export class Students {
   @ApiProperty({ example: 1 })
-  @IsNumber({ negative: false, notEmpty: true, min: 1, max: 8 })
+  @IsNumber({ negative: false, notEmpty: true, min: 1, max: 3 })
   semester: number
+
+  @ApiProperty({ example: 1 })
+  @IsNumber({ negative: false, notEmpty: true })
+  startYear: number
+
+  @ApiProperty({ example: 1 })
+  @IsNumber({ negative: false, notEmpty: true })
+  endYear: number
 
   @ApiProperty({ example: [1, 2] })
   @IsArray({ notEmpty: true, nestedType: Number })

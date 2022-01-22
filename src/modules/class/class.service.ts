@@ -6,6 +6,7 @@ import { Model } from 'mongoose'
 import { Class, ClassDocument } from './class.schema'
 import { ClassResponse } from './dto/class.response.dto'
 import { CreateClass } from './dto/create-class.dto'
+import { FindClassIdsDto } from './dto/find-classIds.dto'
 
 @Injectable()
 export class ClassService {
@@ -26,5 +27,13 @@ export class ClassService {
     } catch (error) {
       throw error
     }
+  }
+
+  async findClass(dto: FindClassIdsDto) {
+    console.log(dto.classIds)
+    const data = await this.model
+      .find({ classId: dto.classIds })
+      .lean({ virtuals: true })
+    return this.mapper.mapArray(data, ClassResponse, Class)
   }
 }
