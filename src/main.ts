@@ -6,14 +6,12 @@ import { AppModule } from './app.module'
 import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { HttpExceptionFilter } from './filters'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import helmet from 'helmet'
 import { ENV, PORT } from './config/secrets'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
   app
-    .use(helmet())
     .setGlobalPrefix('/api')
     .useGlobalPipes(
       new ValidationPipe({
@@ -25,8 +23,6 @@ async function bootstrap() {
     .enableCors()
 
   setUpSwagger(app)
-  console.log(ENV)
-  console.log(PORT)
   await app.listen(PORT)
 }
 
