@@ -5,7 +5,7 @@ import mongooseLeanVirtuals from 'mongoose-lean-virtuals'
 import { Document, SchemaTypes } from 'mongoose'
 import { ApiProperty } from '@nestjs/swagger'
 import { AutoMap } from '@automapper/classes'
-import { IsNumber } from '../../decorators/validators'
+import { IsNumber, IsArray } from '../../decorators/validators'
 
 export type ClassDocument = Class & Document
 
@@ -15,7 +15,7 @@ export class Students {
   semester: number
 
   @ApiProperty({ example: [1, 2] })
-  @IsNumber({ negative: false })
+  @IsArray({ notEmpty: true, nestedType: Number })
   studentsIds: [number]
 
   @ApiProperty({ example: 60000002 })
