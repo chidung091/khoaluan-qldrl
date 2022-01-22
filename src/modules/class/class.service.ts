@@ -8,6 +8,7 @@ import { ClassResponse } from './dto/class.response.dto'
 import { CreateClass } from './dto/create-class.dto'
 import { FindClassIdDto } from './dto/find-classId.dto'
 import { FindClassIdsDto } from './dto/find-classIds.dto'
+import { FindHeadMasterClassDto } from './dto/find-headmaster-class.dto'
 
 @Injectable()
 export class ClassService {
@@ -39,6 +40,18 @@ export class ClassService {
 
   async findClassDetail(dto: FindClassIdDto) {
     const data = await this.model.findOne({ classId: dto.classId })
+    return data
+  }
+
+  async findClassByHeadMasterInYear(dto: FindHeadMasterClassDto) {
+    const data = await this.model.find({
+      $or: [
+        { 'students.headMasterId': dto.headMasterId },
+        { 'students.startYear': dto.startYear },
+        { 'students.endYear': dto.endYear },
+        { 'students.semester': dto.semester },
+      ],
+    })
     return data
   }
 }

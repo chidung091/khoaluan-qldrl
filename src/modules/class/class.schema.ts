@@ -29,6 +29,10 @@ export class Students {
   @ApiProperty({ example: 60000002 })
   @IsNumber({ negative: false })
   headMasterId: number
+
+  @ApiProperty({ example: 675105036 })
+  @IsNumber({ negative: false })
+  monitorId: number
 }
 
 @BaseSchema()

@@ -4,6 +4,7 @@ import { ClassResponse } from '../class/dto/class.response.dto'
 import { CreateClass } from '../class/dto/create-class.dto'
 import { FindClassIdDto } from '../class/dto/find-classId.dto'
 import { FindClassIdsDto } from '../class/dto/find-classIds.dto'
+import { FindHeadMasterClassDto } from '../class/dto/find-headmaster-class.dto'
 import { WebhookService } from './webhook.service'
 
 @ApiTags('webhook')
@@ -40,5 +41,14 @@ export class WebhookController {
   })
   async getClassDetail(@Body() dto: FindClassIdDto) {
     return this.webhookService.findClassById(dto)
+  }
+
+  @Post('/class/head-master')
+  @ApiHeader({
+    name: 'api-key',
+    description: 'Api key',
+  })
+  async getClassHeadMaster(@Body() dto: FindHeadMasterClassDto) {
+    return this.webhookService.findClassForHeadMaster(dto)
   }
 }
