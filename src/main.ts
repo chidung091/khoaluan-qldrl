@@ -6,7 +6,7 @@ import { AppModule } from './app.module'
 import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { HttpExceptionFilter } from './filters'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import { ENV, PORT } from './config/secrets'
+import { PORT } from './config/secrets'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -29,11 +29,7 @@ async function bootstrap() {
 function setUpSwagger(app: INestApplication) {
   const options = new DocumentBuilder()
     .setTitle('Point Ratings System')
-    .setDescription(
-      `API specification for Thanh Huyen Point Ratings System.\n
-    Terms:\n
-    - Internal: only available for other services in Thanh Huyen system.`,
-    )
+    .setDescription(`API specification for Thanh Huyen Point Ratings System.`)
     .setVersion('0.1.2')
     .addBearerAuth()
     .build()
