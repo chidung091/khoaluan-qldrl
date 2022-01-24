@@ -19,5 +19,6 @@ export class FindHeadMasterStudentListDto {
   endYear: number
 
   @ApiProperty()
+  @IsNumber({ notEmpty: true })
   classId: number
 }

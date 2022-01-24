@@ -9,6 +9,7 @@ import { CreateClass } from './dto/create-class.dto'
 import { FindClassIdDto } from './dto/find-classId.dto'
 import { FindClassIdsDto } from './dto/find-classIds.dto'
 import { FindHeadMasterClassDto } from './dto/find-headmaster-class.dto'
+import { FindHeadMasterStudentListDto } from './dto/find-headmaster-student.dto'
 import { FindStudentListByMonitor } from './dto/find-student-headmaster.dto'
 
 @Injectable()
@@ -80,5 +81,74 @@ export class ClassService {
       )
     })
     return dataStudentsIds.studentsIds
+  }
+
+  async findStudentListByHeadMaster(dto: FindHeadMasterStudentListDto) {
+    const data = await this.model.find({
+      $and: [
+        { 'students.headMasterId': dto.headMasterId },
+        { 'students.startYear': dto.startYear },
+        { 'students.endYear': dto.endYear },
+        { 'students.semester': dto.semester },
+      ],
+    })
+    const dataResponse = []
+    await Promise.all(
+      data.map(async (arrayItem) => {
+        const dataStudent = arrayItem.students
+        const dataClass = arrayItem.classId
+        await Promise.all(
+          dataStudent.map(async (arrayI) => {
+            const dataStudentsIDs = arrayI.studentsIds
+            await Promise.all(
+              dataStudentsIDs.map(async (arrayItemm) => {
+                const data = {
+                  id: arrayItemm,
+                  classId: dataClass,
+                }
+                dataResponse.push(data)
+              }),
+            )
+          }),
+        )
+      }),
+    )
+    return dataResponse
+  }
+
+  async findStudentListByHeadMasterWithClassId(
+    dto: FindHeadMasterStudentListDto,
+  ) {
+    const data = await this.model.find({
+      $and: [
+        { 'students.headMasterId': dto.headMasterId },
+        { 'students.startYear': dto.startYear },
+        { 'students.endYear': dto.endYear },
+        { 'students.semester': dto.semester },
+        { classId: dto.classId },
+      ],
+    })
+    const dataResponse = []
+    await Promise.all(
+      data.map(async (arrayItem) => {
+        const dataStudent = arrayItem.students
+        const dataClass = arrayItem.classId
+        await Promise.all(
+          dataStudent.map(async (arrayI) => {
+            const dataStudentsIDs = arrayI.studentsIds
+            await Promise.all(
+              dataStudentsIDs.map(async (arrayItemm) => {
+                const data = {
+                  id: arrayItemm,
+                  classId: dataClass,
+                }
+                dataResponse.push(data)
+              }),
+            )
+          }),
+        )
+      }),
+    )
+    return dataResponse
   }
 }
