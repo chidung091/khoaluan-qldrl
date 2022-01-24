@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsNumber } from '../../../decorators/validators'
 
-export class FindHeadMasterClassDto {
+export class FindHeadMasterStudentListDto {
   @ApiProperty()
   @IsNumber({ notEmpty: true })
   headMasterId: number
@@ -17,4 +17,7 @@ export class FindHeadMasterClassDto {
   @ApiProperty()
   @IsNumber({ notEmpty: true })
   endYear: number
+
+  @ApiProperty()
+  classId: number
 }

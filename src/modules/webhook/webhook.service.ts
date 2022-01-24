@@ -4,6 +4,7 @@ import { CreateClass } from '../class/dto/create-class.dto'
 import { FindClassIdDto } from '../class/dto/find-classId.dto'
 import { FindClassIdsDto } from '../class/dto/find-classIds.dto'
 import { FindHeadMasterClassDto } from '../class/dto/find-headmaster-class.dto'
+import { FindStudentListByMonitor } from '../class/dto/find-student-headmaster.dto'
 
 @Injectable()
 export class WebhookService {
@@ -23,5 +24,9 @@ export class WebhookService {
 
   async findClassForHeadMaster(dto: FindHeadMasterClassDto) {
     return await this.classService.findClassByHeadMasterInYear(dto)
+  }
+
+  async findListStudentForMonitor(dto: FindStudentListByMonitor) {
+    return await this.classService.findStudentListByMonitor(dto)
   }
 }

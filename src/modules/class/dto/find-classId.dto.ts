@@ -1,6 +1,5 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsArray, IsNumber } from '../../../decorators/validators'
-import { Students } from '../class.schema'
+import { ApiProperty } from '@nestjs/swagger'
+import { IsNumber } from '../../../decorators/validators'
 
 export class FindClassIdDto {
   @ApiProperty()

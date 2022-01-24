@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Post } from '@nestjs/common'
+import { Body, Controller, Post } from '@nestjs/common'
 import { ApiBody, ApiHeader, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { ClassResponse } from '../class/dto/class.response.dto'
 import { CreateClass } from '../class/dto/create-class.dto'
 import { FindClassIdDto } from '../class/dto/find-classId.dto'
 import { FindClassIdsDto } from '../class/dto/find-classIds.dto'
 import { FindHeadMasterClassDto } from '../class/dto/find-headmaster-class.dto'
+import { FindStudentListByMonitor } from '../class/dto/find-student-headmaster.dto'
 import { WebhookService } from './webhook.service'
 
 @ApiTags('webhook')
@@ -50,5 +51,14 @@ export class WebhookController {
   })
   async getClassHeadMaster(@Body() dto: FindHeadMasterClassDto) {
     return this.webhookService.findClassForHeadMaster(dto)
+  }
+
+  @Post('/student/monitor-list')
+  @ApiHeader({
+    name: 'api-key',
+    description: 'Api key',
+  })
+  async getStudentMonitorList(@Body() dto: FindStudentListByMonitor) {
+    return this.webhookService.findListStudentForMonitor(dto)
   }
 }

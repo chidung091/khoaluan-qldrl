@@ -9,6 +9,7 @@ import { CreateClass } from './dto/create-class.dto'
 import { FindClassIdDto } from './dto/find-classId.dto'
 import { FindClassIdsDto } from './dto/find-classIds.dto'
 import { FindHeadMasterClassDto } from './dto/find-headmaster-class.dto'
+import { FindStudentListByMonitor } from './dto/find-student-headmaster.dto'
 
 @Injectable()
 export class ClassService {
@@ -45,13 +46,39 @@ export class ClassService {
 
   async findClassByHeadMasterInYear(dto: FindHeadMasterClassDto) {
     const data = await this.model.find({
-      $or: [
+      $and: [
         { 'students.headMasterId': dto.headMasterId },
         { 'students.startYear': dto.startYear },
         { 'students.endYear': dto.endYear },
         { 'students.semester': dto.semester },
       ],
     })
-    return data
+    const dataResponse = []
+    await Promise.all(
+      data.map(async (arrayItem) => {
+        dataResponse.push(arrayItem.classId)
+      }),
+    )
+    return dataResponse
+  }
+
+  async findStudentListByMonitor(dto: FindStudentListByMonitor) {
+    const data = await this.model.findOne({
+      $and: [
+        { 'students.startYear': dto.startYear },
+        { 'students.endYear': dto.endYear },
+        { 'students.monitorId': dto.monitorId },
+        { 'students.semester': dto.semester },
+      ],
+    })
+    const dataStudentsIds = data.students.find((student) => {
+      return (
+        student.startYear === dto.startYear &&
+        student.endYear === dto.endYear &&
+        student.monitorId === dto.monitorId &&
+        student.semester === dto.semester
+      )
+    })
+    return dataStudentsIds.studentsIds
   }
 }
