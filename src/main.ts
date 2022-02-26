@@ -6,7 +6,7 @@ import { AppModule } from './app.module'
 import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { HttpExceptionFilter } from './filters'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import { PORT } from './config/secrets'
+import { MICROSERVICE_HOST, PORT } from './config/secrets'
 import { Transport } from '@nestjs/microservices'
 
 async function bootstrap() {
@@ -24,7 +24,7 @@ async function bootstrap() {
   app.connectMicroservice({
     transport: Transport.TCP,
     options: {
-      host: 'localhost',
+      host: MICROSERVICE_HOST,
       port: 4004,
     },
   })

@@ -21,3 +21,5 @@ export const MONGO_URI = getEnv('MONGODB_URI')
 
 export const API_KEY = getEnv('API_KEY')
 export const PAYMENT_SERVICE = getEnv('PAYMENT_SERVICE')
+export const MICROSERVICE_HOST = getEnv('MICROSERVICE_HOST')
+export const BE1_SERVICE = getEnv('BE1_SERVICES')
