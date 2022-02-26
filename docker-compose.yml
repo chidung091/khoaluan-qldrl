@@ -32,4 +32,4 @@ volumes:
   service:
 networks:
   point-rating-network:
-    name: point-rating-network
+    name: point-network
