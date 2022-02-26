@@ -41,7 +41,7 @@ export class ClassService {
       const data = 'data'
       console.log(this.client)
       const user = this.client.send({ role: 'user', cmd: 'get' }, { data })
-      return this.client
+      return user
     } catch (e) {
       Logger.log(e)
       throw e
