@@ -39,11 +39,9 @@ export class ClassService {
   async testCallMicroservice() {
     try {
       const data = 'data'
-      const user = await this.client.send(
-        { role: 'user', cmd: 'get' },
-        { data },
-      )
-      return user
+      console.log(this.client)
+      const user = this.client.send({ role: 'user', cmd: 'get' }, { data })
+      return this.client
     } catch (e) {
       Logger.log(e)
       throw e
