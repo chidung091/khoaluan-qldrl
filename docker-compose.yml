@@ -8,6 +8,7 @@ services:
     container_name: point-rating-system
     ports:
       - 3004:3004
+      - 4004:4004
     volumes:
       - service:/di
     depends_on:

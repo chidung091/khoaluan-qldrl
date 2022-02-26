@@ -1,6 +1,7 @@
 import { Mapper } from '@automapper/core'
 import { InjectMapper } from '@automapper/nestjs'
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable, Logger } from '@nestjs/common'
+import { ClientProxy } from '@nestjs/microservices'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { Class, ClassDocument } from './class.schema'
@@ -15,6 +16,8 @@ import { FindStudentListByMonitor } from './dto/find-student-headmaster.dto'
 @Injectable()
 export class ClassService {
   constructor(
+    @Inject('BE_CLIENT')
+    private readonly client: ClientProxy,
     @InjectModel(Class.name) readonly model: Model<ClassDocument>,
     @InjectMapper() readonly mapper: Mapper,
   ) {}
@@ -33,6 +36,19 @@ export class ClassService {
     }
   }
 
+  async testCallMicroservice() {
+    try {
+      const data = 'data'
+      const user = await this.client.send(
+        { role: 'user', cmd: 'get' },
+        { data },
+      )
+      return user
+    } catch (e) {
+      Logger.log(e)
+      throw e
+    }
+  }
   async findClass(dto: FindClassIdsDto) {
     const data = await this.model
       .find({ classId: dto.classIds })
