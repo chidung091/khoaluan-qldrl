@@ -9,6 +9,7 @@ import { WebhookModule } from './modules/webhook/webhook.module'
 import { ClassModule } from './modules/class/class.module'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
+import { RatingPagesModule } from './modules/rating-pages/rating-pages.module'
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AppService } from './app.service'
     SharedModule,
     WebhookModule,
     ClassModule,
+    RatingPagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
