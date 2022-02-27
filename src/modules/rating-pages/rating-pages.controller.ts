@@ -62,7 +62,7 @@ export class RatingPagesController {
     return this.ratingPagesService.getAllRatingPages(query)
   }
 
-  @Get(':/id')
+  @Get('/:id')
   @ApiOperation({
     operationId: 'getRatingPagesById',
     description: 'Get Rating Pages By Id',
