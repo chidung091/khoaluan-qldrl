@@ -23,18 +23,22 @@ export class RatingPagesController {
   constructor(private readonly ratingPagesService: RatingPagesService) {}
 
   @Post()
+  @ApiOperation({
+    operationId: 'createRatingPages',
+    description: 'create a Rating Pages',
+  })
   @ApiOkResponse({ type: RatingPagesResponse })
-  async create(@Body() dto: CreateRatingPagesDto) {
+  async createRatingPages(@Body() dto: CreateRatingPagesDto) {
     return this.ratingPagesService.createNewRatingPages(dto)
   }
 
   @Put('/:id')
   @ApiOperation({
-    operationId: 'updateRateCard',
-    description: 'update a rate card',
+    operationId: 'updateRatingPages',
+    description: 'update a Rating Pages By Id',
   })
   @ApiOkResponse({ type: CreateRatingPagesDto })
-  updateRateCard(
+  async updateRatingPages(
     @Param('id', ValidationObjectIdPipe) id: string,
     @Body() dto: CreateRatingPagesDto,
   ) {
@@ -43,22 +47,22 @@ export class RatingPagesController {
 
   @Delete('/:id')
   @ApiOperation({
-    operationId: 'deleteRateCard',
-    description: 'delete a rate card',
+    operationId: 'deleteRatingPages',
+    description: 'Delete a Rating Pages By Id',
   })
   @ApiOkResponse({ type: RatingPagesResponse })
-  deleteRateCard(@Param('id', ValidationObjectIdPipe) id: string) {
+  async deleteRatingPages(@Param('id', ValidationObjectIdPipe) id: string) {
     return this.ratingPagesService.deleteRatingPages(id)
   }
 
   @Get('')
   @ApiOperation({
-    operationId: 'getAllRateCard',
-    description: 'Retrieve my payment history',
+    operationId: 'getAllRatingPages',
+    description: 'Get All Rating Pages',
   })
   @ApiOkResponse({ type: [RatingPagesResponse] })
   @UseInterceptors(PaginationInterceptor)
-  getAllRateCard(@Query() query: PaginationQueryDto) {
+  async getAllRatingPages(@Query() query: PaginationQueryDto) {
     return this.ratingPagesService.getAllRatingPages(query)
   }
 
@@ -68,7 +72,7 @@ export class RatingPagesController {
     description: 'Get Rating Pages By Id',
   })
   @ApiOkResponse({ type: RatingPagesResponse })
-  getRatingPagesById(@Param('id', ValidationObjectIdPipe) id: string) {
+  async getRatingPagesById(@Param('id', ValidationObjectIdPipe) id: string) {
     return this.ratingPagesService.getRatingPagesById(id)
   }
 }
