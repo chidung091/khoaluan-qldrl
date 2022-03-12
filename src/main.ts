@@ -13,7 +13,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
   app
-    .setGlobalPrefix('/api/')
+    .setGlobalPrefix('/api/rating')
     .useGlobalPipes(
       new ValidationPipe({
         transform: true,
@@ -44,7 +44,7 @@ function setUpSwagger(app: INestApplication) {
 
   const document = SwaggerModule.createDocument(app, options)
 
-  SwaggerModule.setup('/api/docs', app, document, {
+  SwaggerModule.setup('/api/rating/docs', app, document, {
     swaggerOptions: {
       displayOperationId: true,
     },
