@@ -7,22 +7,33 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger'
 import { PaginationQueryDto } from 'src/common/dto'
+import { Roles } from 'src/decorators'
+import { AuthGuard, RoleGuard } from 'src/guards'
+import { Role } from 'src/guards/guards.enum'
 import { PaginationInterceptor } from 'src/interceptors'
 import { ValidationObjectIdPipe } from 'src/pipes'
 import { CreateRatingPagesDto } from './dto/create-rating-pages.dto'
 import { RatingPagesResponse } from './dto/rating-pages.response.dto'
 import { RatingPagesService } from './rating-pages.service'
-
+@ApiBearerAuth()
 @ApiTags('rating-pages')
 @Controller('rating-pages')
 export class RatingPagesController {
   constructor(private readonly ratingPagesService: RatingPagesService) {}
 
   @Post()
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(Role.Admin)
   @ApiOperation({
     operationId: 'createRatingPages',
     description: 'create a Rating Pages',
@@ -33,6 +44,8 @@ export class RatingPagesController {
   }
 
   @Put('/:id')
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(Role.Admin)
   @ApiOperation({
     operationId: 'updateRatingPages',
     description: 'update a Rating Pages By Id',
@@ -46,6 +59,8 @@ export class RatingPagesController {
   }
 
   @Delete('/:id')
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(Role.Admin)
   @ApiOperation({
     operationId: 'deleteRatingPages',
     description: 'Delete a Rating Pages By Id',
@@ -56,6 +71,8 @@ export class RatingPagesController {
   }
 
   @Get('')
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(Role.Admin, Role.Department, Role.Monitor, Role.Student, Role.Teacher)
   @ApiOperation({
     operationId: 'getAllRatingPages',
     description: 'Get All Rating Pages',
@@ -67,6 +84,8 @@ export class RatingPagesController {
   }
 
   @Get('/:id')
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(Role.Admin, Role.Department, Role.Monitor, Role.Student, Role.Teacher)
   @ApiOperation({
     operationId: 'getRatingPagesById',
     description: 'Get Rating Pages By Id',

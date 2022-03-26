@@ -36,20 +36,6 @@ export class ClassService {
     }
   }
 
-  async testCallMicroservice() {
-    try {
-      const data = {
-        data1: 'data',
-        data2: 'data2',
-      }
-      console.log(this.client)
-      const user = this.client.send({ role: 'user', cmd: 'get' }, { data })
-      return user
-    } catch (e) {
-      Logger.log(e)
-      throw e
-    }
-  }
   async findClass(dto: FindClassIdsDto) {
     const data = await this.model
       .find({ classId: dto.classIds })

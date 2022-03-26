@@ -1,22 +1,24 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { CanActivate, Inject, ExecutionContext, Logger } from '@nestjs/common'
+import { ClientProxy } from '@nestjs/microservices'
+import { firstValueFrom } from 'rxjs'
 
-@Injectable()
 export class AuthGuard implements CanActivate {
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
-    const request = context.switchToHttp().getRequest();
+  constructor(
+    @Inject('AUTH_CLIENT')
+    private readonly client: ClientProxy,
+  ) {}
 
-    if (!request.headers.authorization) {
-      throw new UnauthorizedException();
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const req = context.switchToHttp().getRequest()
+    try {
+      const jwt = req.headers['authorization']?.split(' ')[1]
+      const res = await firstValueFrom(
+        this.client.send({ role: 'auth', cmd: 'check' }, jwt),
+      )
+      return res
+    } catch (err) {
+      Logger.error(err)
+      return false
     }
-
-    return true;
   }
 }
