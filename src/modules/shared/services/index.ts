@@ -1,2 +1,2 @@
-export * from './config.service';
-export * from './http-utils.service';
+export * from './config.service'
+export * from './http-utils.service'

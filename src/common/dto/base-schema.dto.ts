@@ -1,14 +1,14 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from '@automapper/classes'
 
 export class BaseMongo {
-  _id: string;
+  _id: string
 
   @AutoMap()
-  id: string;
+  id: string
 
   @AutoMap()
-  createdAt: string;
+  createdAt: string
 
   @AutoMap()
-  updatedAt: string;
+  updatedAt: string
 }

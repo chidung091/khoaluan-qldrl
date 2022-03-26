@@ -1,1 +1,1 @@
-export * from './pagination.interceptor';
+export * from './pagination.interceptor'

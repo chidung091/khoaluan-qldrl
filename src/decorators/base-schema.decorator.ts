@@ -1,5 +1,5 @@
-import { applyDecorators } from '@nestjs/common';
-import { Schema, SchemaOptions } from '@nestjs/mongoose';
+import { applyDecorators } from '@nestjs/common'
+import { Schema, SchemaOptions } from '@nestjs/mongoose'
 
 export const BaseSchema = (options?: SchemaOptions) =>
   applyDecorators(
@@ -18,4 +18,4 @@ export const BaseSchema = (options?: SchemaOptions) =>
         options,
       ),
     ),
-  );
+  )

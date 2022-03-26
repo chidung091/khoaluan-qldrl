@@ -1,6 +1,6 @@
-import { applyDecorators, HttpStatus } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
-import { ErrorResponse } from 'src/common/dto';
+import { applyDecorators, HttpStatus } from '@nestjs/common'
+import { ApiResponse } from '@nestjs/swagger'
+import { ErrorResponse } from 'src/common/dto'
 
 export const CommonErrorResponses = () => {
   return applyDecorators(
@@ -24,5 +24,5 @@ export const CommonErrorResponses = () => {
       description: 'Service unavailable',
       type: ErrorResponse,
     }),
-  );
-};
+  )
+}

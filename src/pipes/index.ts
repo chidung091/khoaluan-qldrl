@@ -1,1 +1,1 @@
-export * from './validation-object-id-pipe';
+export * from './validation-object-id-pipe'
