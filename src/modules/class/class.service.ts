@@ -4,6 +4,8 @@ import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
+import { firstValueFrom } from 'rxjs'
+import { ITimeResponse } from '../mark/mark.interface'
 import { Class, ClassDocument } from './class.schema'
 import { ClassResponse } from './dto/class.response.dto'
 import { CreateClass } from './dto/create-class.dto'
@@ -12,6 +14,7 @@ import { FindClassIdsDto } from './dto/find-classIds.dto'
 import { FindHeadMasterClassDto } from './dto/find-headmaster-class.dto'
 import { FindHeadMasterStudentListDto } from './dto/find-headmaster-student.dto'
 import { FindStudentListByMonitor } from './dto/find-student-headmaster.dto'
+import { FindStudentListByStudentID } from './dto/find-student-id.dto'
 
 @Injectable()
 export class ClassService {
@@ -66,6 +69,20 @@ export class ClassService {
     return dataResponse
   }
 
+  async findClassByStudentId(id: number) {
+    const res = await firstValueFrom<ITimeResponse>(
+      this.client.send({ role: 'time', cmd: 'get-active' }, {}),
+    )
+    const data = await this.model.findOne({
+      $and: [
+        { 'students.studentsIds': id },
+        { 'students.startYear': res.startYear },
+        { 'students.endYear': res.endYear },
+        { 'students.semester': res.semester },
+      ],
+    })
+    return data
+  }
   async findStudentListByMonitor(dto: FindStudentListByMonitor) {
     const data = await this.model.findOne({
       $and: [

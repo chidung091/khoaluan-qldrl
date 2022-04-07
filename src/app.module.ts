@@ -7,6 +7,7 @@ import { MONGO_URI } from './config/secrets'
 import { ClassModule } from './modules/class/class.module'
 import { RatingPagesModule } from './modules/rating-pages/rating-pages.module'
 import { UserMiddleware } from './middlewares/user.middleware'
+import { MarkModule } from './modules/mark/mark.module'
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserMiddleware } from './middlewares/user.middleware'
     SharedModule,
     ClassModule,
     RatingPagesModule,
+    MarkModule,
   ],
 })
 export class AppModule {
