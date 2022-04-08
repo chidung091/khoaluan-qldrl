@@ -12,7 +12,9 @@ import { CreateClass } from './dto/create-class.dto'
 import { FindClassIdDto } from './dto/find-classId.dto'
 import { FindClassIdsDto } from './dto/find-classIds.dto'
 import { FindHeadMasterClassDto } from './dto/find-headmaster-class.dto'
+import { FindHeadMasterStudentListIdDto } from './dto/find-headmaster-student-id.dto'
 import { FindHeadMasterStudentListDto } from './dto/find-headmaster-student.dto'
+import { FindStudentListByMonitorWithId } from './dto/find-monitor-student-id.dto'
 import { FindStudentListByMonitor } from './dto/find-student-headmaster.dto'
 import { FindStudentListByStudentID } from './dto/find-student-id.dto'
 
@@ -69,6 +71,24 @@ export class ClassService {
     return dataResponse
   }
 
+  async findClassByMonitorInYear(dto: FindStudentListByMonitor) {
+    const data = await this.model.find({
+      $and: [
+        { 'students.monitorId': dto.monitorId },
+        { 'students.startYear': dto.startYear },
+        { 'students.endYear': dto.endYear },
+        { 'students.semester': dto.semester },
+      ],
+    })
+    const dataResponse = []
+    await Promise.all(
+      data.map(async (arrayItem) => {
+        dataResponse.push(arrayItem.classId)
+      }),
+    )
+    return dataResponse
+  }
+
   async findClassByStudentId(id: number) {
     const res = await firstValueFrom<ITimeResponse>(
       this.client.send({ role: 'time', cmd: 'get-active' }, {}),
@@ -103,6 +123,31 @@ export class ClassService {
     return dataStudentsIds.studentsIds
   }
 
+  async findStudentListByMonitorSearch(dto: FindStudentListByMonitorWithId) {
+    const data = await this.model.findOne({
+      $and: [
+        { 'students.startYear': dto.startYear },
+        { 'students.endYear': dto.endYear },
+        { 'students.monitorId': dto.monitorId },
+        { 'students.semester': dto.semester },
+      ],
+    })
+    const dataStudentsIds = data.students.find((student) => {
+      return (
+        student.startYear === dto.startYear &&
+        student.endYear === dto.endYear &&
+        student.monitorId === dto.monitorId &&
+        student.semester === dto.semester
+      )
+    })
+    const findId = dataStudentsIds.studentsIds.find((x) => x === dto.studentId)
+    if (!findId || !dto.studentId) {
+      return dataStudentsIds.studentsIds
+    }
+    const dataResponse = [findId]
+    return dataResponse
+  }
+
   async findStudentListByHeadMaster(dto: FindHeadMasterStudentListDto) {
     const data = await this.model.find({
       $and: [
@@ -129,6 +174,51 @@ export class ClassService {
                 dataResponse.push(data)
               }),
             )
+          }),
+        )
+      }),
+    )
+    return dataResponse
+  }
+
+  async findStudentListByHeadMasterSearch(dto: FindHeadMasterStudentListIdDto) {
+    const data = await this.model.find({
+      $and: [
+        { 'students.headMasterId': dto.headMasterId },
+        { 'students.startYear': dto.startYear },
+        { 'students.endYear': dto.endYear },
+        { 'students.semester': dto.semester },
+      ],
+    })
+    const dataResponse = []
+    await Promise.all(
+      data.map(async (arrayItem) => {
+        const dataStudent = arrayItem.students
+        const dataClass = arrayItem.classId
+        await Promise.all(
+          dataStudent.map(async (arrayI) => {
+            const dataStudentsIDs = arrayI.studentsIds
+            if (!dto.studentId) {
+              await Promise.all(
+                dataStudentsIDs.map(async (arrayItemm) => {
+                  const data = {
+                    id: arrayItemm,
+                    classId: dataClass,
+                  }
+                  dataResponse.push(data)
+                }),
+              )
+              return dataResponse
+            }
+            const findId = dataStudentsIDs.find((x) => x === dto.studentId)
+            if (!findId) {
+              return dataResponse
+            }
+            const data = {
+              id: findId,
+              classId: dataClass,
+            }
+            dataResponse.push(data)
           }),
         )
       }),
