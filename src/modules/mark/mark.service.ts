@@ -352,6 +352,9 @@ export class MarkService {
         finalStudentId,
       ),
     )
+    const resClassName = await firstValueFrom<string>(
+      this.client.send({ role: 'class', cmd: 'get-class-name' }, classId),
+    )
     const year = res.startYear + '-' + res.endYear
     if (!findClassMark.markDetail.find((x) => x.studentId === finalStudentId)) {
       const dataResponse = {
@@ -360,6 +363,7 @@ export class MarkService {
         semester: res.semester,
         name: resDetailUser.name,
         birthDate: resDetailUser.birthDate,
+        className: resClassName,
       }
       return dataResponse
     }
@@ -370,6 +374,7 @@ export class MarkService {
       semester: res.semester,
       name: resDetailUser.name,
       birthDate: resDetailUser.birthDate,
+      className: resClassName,
     }
     return dataResponse
   }
