@@ -440,13 +440,13 @@ export class MarkService {
         const ratingPages = data.type.find((ratingPage) => {
           return ratingPage.idType === point.idType
         })
-        console.log(ratingPages)
+        console.log('1', ratingPages)
         await Promise.all(
           point.subType.map(async (subPoint) => {
             const subRatingPages = ratingPages.subType.find((subRatingPage) => {
               return subRatingPage.idSubType === subPoint.idSubType
             })
-            console.log(subRatingPages)
+            console.log('2', subRatingPages)
 
             await Promise.all(
               subPoint.subTypeScore.map(async (subTypePoint) => {
@@ -458,7 +458,7 @@ export class MarkService {
                     )
                   },
                 )
-                console.log(subTypeRatingPages)
+                console.log('3', subTypeRatingPages)
                 if (subTypePoint.monitorScore) {
                   if (
                     this.compareSubScore(
