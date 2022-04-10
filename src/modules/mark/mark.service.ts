@@ -1,24 +1,16 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { InjectModel } from '@nestjs/mongoose'
-import { Type } from 'class-transformer'
 import { Model } from 'mongoose'
 import { firstValueFrom } from 'rxjs'
 import { ClassService } from '../class/class.service'
-import { Category } from '../rating-pages/rating-pages.enum'
 import { RatingPagesService } from '../rating-pages/rating-pages.service'
 import { CreateMarkMonitorDto } from './dto/create-mark-monitor.dto'
 import { CreateMarkTeacherDto } from './dto/create-mark-teacher.dto'
 import { CreateMark } from './dto/create-mark.dto'
 import { PersonType } from './mark.enum'
 import { IDetailUserResponse, IMark, ITimeResponse } from './mark.interface'
-import {
-  Marks,
-  MarksDetail,
-  MarksDetailType,
-  MarksDocument,
-  PointList,
-} from './mark.schema'
+import { Marks, MarksDetail, MarksDocument } from './mark.schema'
 
 @Injectable()
 export class MarkService {
@@ -351,18 +343,26 @@ export class MarkService {
         'Currently no rating-pages assigned with this classId.Please create new!',
       )
     }
-    if (!findClassMark.markDetail.find((x) => x.studentId === finalStudentId)) {
-      throw new BadRequestException(
-        'Currently no mark assigned with this studentId.Please create new!',
-      )
-    }
     const currentMark = findClassMark.markDetail.find(
       (x) => x.studentId === finalStudentId,
     )
     const resDetailUser = await firstValueFrom<IDetailUserResponse>(
-      this.client.send({ role: 'detail-user', cmd: 'get-by-id' }, {}),
+      this.client.send(
+        { role: 'detail-user', cmd: 'get-by-id' },
+        finalStudentId,
+      ),
     )
-    const year = res.startYear + res.endYear
+    const year = res.startYear + '-' + res.endYear
+    if (!findClassMark.markDetail.find((x) => x.studentId === finalStudentId)) {
+      const dataResponse = {
+        studentId: finalStudentId,
+        year: year,
+        semester: res.semester,
+        name: resDetailUser.name,
+        birthDate: resDetailUser.birthDate,
+      }
+      return dataResponse
+    }
     const dataResponse = {
       pointList: currentMark.pointList,
       studentId: finalStudentId,
