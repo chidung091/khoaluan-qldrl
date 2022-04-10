@@ -434,16 +434,20 @@ export class MarkService {
       res.startYear,
       res.endYear,
     )
+    console.log('dto', dto.pointList)
     await Promise.all(
       dto.pointList.map(async (point) => {
         const ratingPages = data.type.find((ratingPage) => {
           return ratingPage.idType === point.idType
         })
+        console.log(ratingPages)
         await Promise.all(
           point.subType.map(async (subPoint) => {
             const subRatingPages = ratingPages.subType.find((subRatingPage) => {
               return subRatingPage.idSubType === subPoint.idSubType
             })
+            console.log(subRatingPages)
+
             await Promise.all(
               subPoint.subTypeScore.map(async (subTypePoint) => {
                 const subTypeRatingPages = subRatingPages.subTypeScore.find(
@@ -454,6 +458,7 @@ export class MarkService {
                     )
                   },
                 )
+                console.log(subTypeRatingPages)
                 if (subTypePoint.monitorScore) {
                   if (
                     this.compareSubScore(
