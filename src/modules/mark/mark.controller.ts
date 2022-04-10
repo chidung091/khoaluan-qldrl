@@ -28,24 +28,15 @@ import { MarkService } from './mark.service'
 export class MarkController {
   constructor(private readonly markService: MarkService) {}
 
-  @Get('/:classId/student/:studentId')
+  @Get('/:studentId')
   @UseGuards(AuthGuard, RoleGuard)
   @Roles(Role.Department, Role.Monitor, Role.Student, Role.Teacher)
   @ApiOperation({
     operationId: 'get-Mark',
     description: 'create a Rating Pages',
   })
-  async getMarkStudent(
-    @Req() req,
-    @Param()
-    { classId, studentId }: CreateMarkTeacherParamDto,
-  ) {
-    return this.markService.getScore(
-      classId,
-      req.user.userID,
-      studentId,
-      req.user.role,
-    )
+  async getMarkStudent(@Req() req, @Param('studentId') studentId: number) {
+    return this.markService.getScore(req.user.userID, studentId, req.user.role)
   }
 
   @MessagePattern({ role: 'mark', cmd: 'get-score' })

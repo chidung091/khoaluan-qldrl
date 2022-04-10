@@ -327,15 +327,15 @@ export class MarkService {
     return updateDataSave
   }
 
-  async getScore(
-    classId: number,
-    userId: number,
-    studentId: number,
-    type: PersonType,
-  ) {
+  async getScore(userId: number, studentId: number, type: PersonType) {
+    let classId = 0
     if (type === PersonType.Student) {
       classId = await (
         await this.classService.findClassByStudentId(userId)
+      ).classId
+    } else {
+      classId = await (
+        await this.classService.findClassByStudentId(studentId)
       ).classId
     }
     const res = await firstValueFrom<ITimeResponse>(
@@ -434,19 +434,16 @@ export class MarkService {
       res.startYear,
       res.endYear,
     )
-    console.log('dto', dto.pointList)
     await Promise.all(
       dto.pointList.map(async (point) => {
         const ratingPages = data.type.find((ratingPage) => {
           return ratingPage.idType === point.idType
         })
-        console.log('1', ratingPages)
         await Promise.all(
           point.subType.map(async (subPoint) => {
             const subRatingPages = ratingPages.subType.find((subRatingPage) => {
               return subRatingPage.idSubType === subPoint.idSubType
             })
-            console.log('2', subRatingPages)
 
             await Promise.all(
               subPoint.subTypeScore.map(async (subTypePoint) => {
@@ -458,7 +455,6 @@ export class MarkService {
                     )
                   },
                 )
-                console.log('3', subTypeRatingPages)
                 if (subTypePoint.monitorScore) {
                   if (
                     this.compareSubScore(
