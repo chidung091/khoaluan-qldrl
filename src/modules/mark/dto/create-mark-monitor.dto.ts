@@ -38,11 +38,14 @@ export class PointListMonitorDto {
   })
   subTypeScore: UpdateScoreMonitorDto[]
 }
+export class PointTypeMonitor {
+  @ApiProperty({ example: 1 })
+  @IsNumber({ notEmpty: true })
+  idType: number
 
-export class CreateMarkMonitorDto {
   @ApiPropertyOptional({
     type: [PointListMonitorDto],
-    description: 'PointList',
+    description: 'Required information for Students',
   })
   @IsArray({
     nestedType: PointListMonitorDto,
@@ -51,7 +54,21 @@ export class CreateMarkMonitorDto {
     unique: [(o: PointListMonitorDto) => o.idSubType],
     minSize: 1,
   })
-  pointList: PointListMonitorDto[]
+  subType: PointListMonitorDto[]
+}
+export class CreateMarkMonitorDto {
+  @ApiPropertyOptional({
+    type: [PointTypeMonitor],
+    description: 'PointList',
+  })
+  @IsArray({
+    nestedType: PointTypeMonitor,
+    nestedValidate: true,
+    notEmpty: true,
+    unique: [(o: PointTypeMonitor) => o.idType],
+    minSize: 1,
+  })
+  pointList: PointTypeMonitor[]
 }
 
 export class CreateMarkTeacherParamDto {

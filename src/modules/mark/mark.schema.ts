@@ -44,7 +44,24 @@ export class PointList {
   })
   subTypeScore: Score[]
 }
+export class MarksDetailType {
+  @ApiProperty({ example: 1 })
+  @IsNumber({ notEmpty: true })
+  idType: number
 
+  @ApiPropertyOptional({
+    type: [Score],
+    description: 'Required information for Students',
+  })
+  @IsArray({
+    nestedType: PointList,
+    nestedValidate: true,
+    notEmpty: true,
+    unique: [(o: PointList) => o.idSubType],
+    minSize: 1,
+  })
+  subType: PointList[]
+}
 export class MarksDetail {
   @ApiProperty({ example: 1 })
   @IsNumber({ notEmpty: true })
@@ -55,18 +72,18 @@ export class MarksDetail {
   totalPoint: number
 
   @ApiPropertyOptional({
-    type: [PointList],
+    type: [MarksDetailType],
     description: 'Required information for Students',
   })
   @IsArray({
-    nestedType: PointList,
+    nestedType: MarksDetailType,
     nestedValidate: true,
     notEmpty: true,
+    unique: [(o: MarksDetailType) => o.idType],
     minSize: 1,
   })
-  pointList: PointList[]
+  pointList: MarksDetailType[]
 }
-
 @BaseSchema()
 export class Marks extends BaseMongo {
   @Prop({ required: true })

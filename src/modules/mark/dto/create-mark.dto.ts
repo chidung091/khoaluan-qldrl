@@ -20,7 +20,7 @@ export class UpdateScoreDto extends OmitType(Score, [
   @ApiHideProperty()
   teacherScore: number
 }
-export class PointListDto {
+export class PointListStudentDto {
   @ApiProperty({ example: 1 })
   @IsNumber({ notEmpty: true })
   idSubType: number
@@ -39,17 +39,35 @@ export class PointListDto {
   subTypeScore: UpdateScoreDto[]
 }
 
+export class PointTypeForStudent {
+  @ApiProperty({ example: 1 })
+  @IsNumber({ notEmpty: true })
+  idType: number
+
+  @ApiPropertyOptional({
+    type: [PointListStudentDto],
+    description: 'Required information for Students',
+  })
+  @IsArray({
+    nestedType: PointListStudentDto,
+    nestedValidate: true,
+    notEmpty: true,
+    unique: [(o: PointListStudentDto) => o.idSubType],
+    minSize: 1,
+  })
+  subType: PointListStudentDto[]
+}
 export class CreateMark {
   @ApiPropertyOptional({
-    type: [PointListDto],
+    type: [PointTypeForStudent],
     description: 'PointList',
   })
   @IsArray({
-    nestedType: PointListDto,
+    nestedType: PointTypeForStudent,
     nestedValidate: true,
     notEmpty: true,
-    unique: [(o: PointListDto) => o.idSubType],
+    unique: [(o: PointTypeForStudent) => o.idType],
     minSize: 1,
   })
-  pointList: PointListDto[]
+  pointList: PointTypeForStudent[]
 }
