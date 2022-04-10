@@ -8,7 +8,7 @@ import { Exclude } from 'class-transformer'
 import { IsArray, IsNumber } from '../../../decorators/validators'
 import { Score } from '../mark.schema'
 
-export class UpdateScoreDto extends OmitType(Score, [
+export class UpdateScoreTeacherDto extends OmitType(Score, [
   'monitorScore',
   'studentScore',
 ]) {
@@ -20,38 +20,38 @@ export class UpdateScoreDto extends OmitType(Score, [
   @ApiHideProperty()
   studentScore: number
 }
-export class PointListDto {
+export class PointListTeacherDto {
   @ApiProperty({ example: 1 })
   @IsNumber({ notEmpty: true })
   idSubType: number
 
   @ApiPropertyOptional({
-    type: [UpdateScoreDto],
+    type: [UpdateScoreTeacherDto],
     description: 'Required information for Students',
   })
   @IsArray({
-    nestedType: UpdateScoreDto,
+    nestedType: UpdateScoreTeacherDto,
     nestedValidate: true,
     notEmpty: true,
-    unique: [(o: UpdateScoreDto) => o.idSubTypeScore],
+    unique: [(o: UpdateScoreTeacherDto) => o.idSubTypeScore],
     minSize: 1,
   })
-  subTypeScore: UpdateScoreDto[]
+  subTypeScore: UpdateScoreTeacherDto[]
 }
 
 export class CreateMarkTeacherDto {
   @ApiPropertyOptional({
-    type: [PointListDto],
+    type: [PointListTeacherDto],
     description: 'PointList',
   })
   @IsArray({
-    nestedType: PointListDto,
+    nestedType: PointListTeacherDto,
     nestedValidate: true,
     notEmpty: true,
-    unique: [(o: PointListDto) => o.idSubType],
+    unique: [(o: PointListTeacherDto) => o.idSubType],
     minSize: 1,
   })
-  pointList: PointListDto[]
+  pointList: PointListTeacherDto[]
 }
 
 export class CreateMarkTeacherParamDto {

@@ -16,7 +16,6 @@ import { FindHeadMasterStudentListIdDto } from './dto/find-headmaster-student-id
 import { FindHeadMasterStudentListDto } from './dto/find-headmaster-student.dto'
 import { FindStudentListByMonitorWithId } from './dto/find-monitor-student-id.dto'
 import { FindStudentListByMonitor } from './dto/find-student-headmaster.dto'
-import { FindStudentListByStudentID } from './dto/find-student-id.dto'
 
 @Injectable()
 export class ClassService {

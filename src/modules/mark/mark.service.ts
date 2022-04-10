@@ -1,12 +1,14 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { BadRequestException, Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { InjectModel } from '@nestjs/mongoose'
+import { Type } from 'class-transformer'
 import { Model } from 'mongoose'
 import { firstValueFrom } from 'rxjs'
 import { ClassService } from '../class/class.service'
 import { CreateMarkMonitorDto } from './dto/create-mark-monitor.dto'
 import { CreateMarkTeacherDto } from './dto/create-mark-teacher.dto'
 import { CreateMark } from './dto/create-mark.dto'
+import { PersonType } from './mark.enum'
 import { IMark, ITimeResponse } from './mark.interface'
 import { Marks, MarksDocument } from './mark.schema'
 
@@ -290,6 +292,36 @@ export class MarkService {
       { new: true },
     )
     return updateDataSave
+  }
+
+  async getScore(
+    classId: number,
+    userId: number,
+    studentId: number,
+    type: PersonType,
+  ) {
+    if (type === PersonType.Student) {
+      classId = await (
+        await this.classService.findClassByStudentId(userId)
+      ).classId
+    }
+    const res = await firstValueFrom<ITimeResponse>(
+      this.client.send({ role: 'time', cmd: 'get-active' }, {}),
+    )
+    const findClassMark = await this.model.findOne({
+      $and: [
+        { classId: classId },
+        { startYear: res.startYear },
+        { endYear: res.endYear },
+        { semester: res.semester },
+      ],
+    })
+    if (!findClassMark) {
+      throw new BadRequestException(
+        'Currently no rating-pages assigned with this classId.Please create new!',
+      )
+    }
+    return findClassMark
   }
 
   private async createNewMark(

@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common'
+import { Body, Controller } from '@nestjs/common'
 import { MessagePattern } from '@nestjs/microservices'
 import { ApiTags } from '@nestjs/swagger'
 import { ClassService } from './class.service'

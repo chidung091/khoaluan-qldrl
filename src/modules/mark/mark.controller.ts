@@ -1,4 +1,12 @@
-import { Body, Controller, Param, Post, Req, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common'
 import { ApiOperation, ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { Roles } from 'src/decorators'
 import { AuthGuard, RoleGuard } from 'src/guards'
@@ -9,6 +17,7 @@ import {
   CreateMarkTeacherParamDto,
 } from './dto/create-mark-teacher.dto'
 import { CreateMark } from './dto/create-mark.dto'
+import { GetMarkDto } from './dto/get-mark.dto'
 import { MarkService } from './mark.service'
 
 @ApiBearerAuth()
@@ -16,6 +25,22 @@ import { MarkService } from './mark.service'
 @Controller('mark')
 export class MarkController {
   constructor(private readonly markService: MarkService) {}
+
+  @Get()
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(Role.Department, Role.Monitor, Role.Student, Role.Teacher)
+  @ApiOperation({
+    operationId: 'get-Mark',
+    description: 'create a Rating Pages',
+  })
+  async getMarkStudent(@Req() req, @Body() dto: GetMarkDto) {
+    return this.markService.getScore(
+      dto.classId,
+      req.user.userID,
+      dto.studentId,
+      req.user.role,
+    )
+  }
 
   @Post()
   @UseGuards(AuthGuard)
