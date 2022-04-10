@@ -13,10 +13,7 @@ import { Roles } from 'src/decorators'
 import { AuthGuard, RoleGuard } from 'src/guards'
 import { Role } from 'src/guards/guards.enum'
 import { CreateMarkMonitorDto } from './dto/create-mark-monitor.dto'
-import {
-  CreateMarkTeacherDto,
-  CreateMarkTeacherParamDto,
-} from './dto/create-mark-teacher.dto'
+import { CreateMarkTeacherDto } from './dto/create-mark-teacher.dto'
 import { CreateMark } from './dto/create-mark.dto'
 import { GetMarkDto } from './dto/get-mark.dto'
 import { GetScoreMarkDto } from './dto/get-score-mark.dto'
@@ -55,7 +52,7 @@ export class MarkController {
     return this.markService.createMark(req.user.userID, dto)
   }
 
-  @Post('/teacher/:classId/student/:studentId')
+  @Post('/teacher/:studentId')
   @UseGuards(AuthGuard, RoleGuard)
   @Roles(Role.Teacher)
   @ApiOperation({
@@ -64,14 +61,14 @@ export class MarkController {
   })
   async createMarkTeacher(
     @Req() req,
-    @Param()
-    { classId, studentId }: CreateMarkTeacherParamDto,
+    @Param('studentId')
+    studentId: number,
     @Body() dto: CreateMarkTeacherDto,
   ) {
-    return this.markService.createMarkTeacher(classId, studentId, dto)
+    return this.markService.createMarkTeacher(studentId, dto)
   }
 
-  @Post('/monitor/:classId/student/:studentId')
+  @Post('/monitor/:studentId')
   @UseGuards(AuthGuard, RoleGuard)
   @Roles(Role.Monitor)
   @ApiOperation({
@@ -80,10 +77,10 @@ export class MarkController {
   })
   async createMarkMonitor(
     @Req() req,
-    @Param()
-    { classId, studentId }: CreateMarkTeacherParamDto,
+    @Param('studentId')
+    studentId: number,
     @Body() dto: CreateMarkMonitorDto,
   ) {
-    return this.markService.createMarkMonitor(classId, studentId, dto)
+    return this.markService.createMarkMonitor(studentId, dto)
   }
 }

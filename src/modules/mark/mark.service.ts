@@ -127,17 +127,14 @@ export class MarkService {
     return updateDataSave
   }
 
-  async createMarkTeacher(
-    classId: number,
-    studentId: number,
-    dto: CreateMarkTeacherDto,
-  ) {
+  async createMarkTeacher(studentId: number, dto: CreateMarkTeacherDto) {
+    const data = await this.classService.findClassByStudentId(studentId)
     const res = await firstValueFrom<ITimeResponse>(
       this.client.send({ role: 'time', cmd: 'get-active' }, {}),
     )
     const findClassMark = await this.model.findOne({
       $and: [
-        { classId: classId },
+        { classId: data.classId },
         { startYear: res.startYear },
         { endYear: res.endYear },
         { semester: res.semester },
@@ -145,7 +142,7 @@ export class MarkService {
     })
     if (!findClassMark) {
       const dataSave = await this.createNewMark(
-        classId,
+        data.classId,
         res.semester,
         res.startYear,
         res.endYear,
@@ -227,17 +224,14 @@ export class MarkService {
     return updateDataSave
   }
 
-  async createMarkMonitor(
-    classId: number,
-    studentId: number,
-    dto: CreateMarkMonitorDto,
-  ) {
+  async createMarkMonitor(studentId: number, dto: CreateMarkMonitorDto) {
+    const data = await this.classService.findClassByStudentId(studentId)
     const res = await firstValueFrom<ITimeResponse>(
       this.client.send({ role: 'time', cmd: 'get-active' }, {}),
     )
     const findClassMark = await this.model.findOne({
       $and: [
-        { classId: classId },
+        { classId: data.classId },
         { startYear: res.startYear },
         { endYear: res.endYear },
         { semester: res.semester },
@@ -245,7 +239,7 @@ export class MarkService {
     })
     if (!findClassMark) {
       const dataSave = await this.createNewMark(
-        classId,
+        data.classId,
         res.semester,
         res.startYear,
         res.endYear,
