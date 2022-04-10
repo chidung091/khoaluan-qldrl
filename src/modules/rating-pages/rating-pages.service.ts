@@ -1,6 +1,10 @@
 import { Mapper } from '@automapper/core'
 import { InjectMapper } from '@automapper/nestjs'
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { PaginationQueryDto } from 'src/common/dto'
@@ -64,6 +68,26 @@ export class RatingPagesService {
       throw new NotFoundException('RATING_PAGES_NOT_FOUND')
     }
     return this.mapper.map(data.toObject(), RatingPagesResponse, RatingPages)
+  }
+
+  async getRatingPagesWithSemesterInfo(
+    semester: number,
+    startYear: number,
+    endYear: number,
+  ) {
+    const findClassMark = await this.model.findOne({
+      $and: [
+        { startYear: startYear },
+        { endYear: endYear },
+        { semester: semester },
+      ],
+    })
+    if (!findClassMark) {
+      throw new BadRequestException(
+        'Currently no rating-pages assigned with this classId.Please create new!',
+      )
+    }
+    return findClassMark
   }
 
   async updateRatingPages(id: string, dto: CreateRatingPagesDto) {

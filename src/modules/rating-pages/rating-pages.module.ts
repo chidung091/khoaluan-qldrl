@@ -25,5 +25,6 @@ import { BE_AUTH_SERVICE } from 'src/config/secrets'
   ],
   providers: [RatingPagesService, RatingPagesMapper],
   controllers: [RatingPagesController],
+  exports: [RatingPagesService],
 })
 export class RatingPagesModule {}

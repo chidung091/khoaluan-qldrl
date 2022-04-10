@@ -7,6 +7,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common'
+import { MessagePattern } from '@nestjs/microservices'
 import { ApiOperation, ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { Roles } from 'src/decorators'
 import { AuthGuard, RoleGuard } from 'src/guards'
@@ -18,6 +19,7 @@ import {
 } from './dto/create-mark-teacher.dto'
 import { CreateMark } from './dto/create-mark.dto'
 import { GetMarkDto } from './dto/get-mark.dto'
+import { GetScoreMarkDto } from './dto/get-score-mark.dto'
 import { MarkService } from './mark.service'
 
 @ApiBearerAuth()
@@ -26,24 +28,34 @@ import { MarkService } from './mark.service'
 export class MarkController {
   constructor(private readonly markService: MarkService) {}
 
-  @Get()
+  @Get('/:classId/student/:studentId')
   @UseGuards(AuthGuard, RoleGuard)
   @Roles(Role.Department, Role.Monitor, Role.Student, Role.Teacher)
   @ApiOperation({
     operationId: 'get-Mark',
     description: 'create a Rating Pages',
   })
-  async getMarkStudent(@Req() req, @Body() dto: GetMarkDto) {
+  async getMarkStudent(
+    @Req() req,
+    @Param()
+    { classId, studentId }: CreateMarkTeacherParamDto,
+  ) {
     return this.markService.getScore(
-      dto.classId,
+      classId,
       req.user.userID,
-      dto.studentId,
+      studentId,
       req.user.role,
     )
   }
 
+  @MessagePattern({ role: 'mark', cmd: 'get-score' })
+  async getScore(@Body() dto: GetScoreMarkDto) {
+    return this.markService.calculationScore(dto.studentId, dto.type)
+  }
+
   @Post()
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(Role.Student)
   @ApiOperation({
     operationId: 'create-Mark-Student',
     description: 'create a Rating Pages',

@@ -52,7 +52,7 @@ export class SubType {
     unique: [(o: SubTypeScore) => o.idSubTypeScore],
     minSize: 1,
   })
-  subTypeScore: SubTypeScore
+  subTypeScore: SubTypeScore[]
 }
 export class Type {
   @ApiProperty({ example: 1 })

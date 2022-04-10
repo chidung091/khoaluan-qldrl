@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { BE1_SERVICE, BE_AUTH_SERVICE } from 'src/config/secrets'
 import { ClassModule } from '../class/class.module'
+import { RatingPagesModule } from '../rating-pages/rating-pages.module'
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ClassModule } from '../class/class.module'
       },
     ]),
     ClassModule,
+    RatingPagesModule,
   ],
   providers: [MarkService],
   controllers: [MarkController],
