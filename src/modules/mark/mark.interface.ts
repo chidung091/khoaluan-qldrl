@@ -29,3 +29,8 @@ export interface ITimeResponse {
   updatedAt: Date
   status: Status
 }
+
+export interface IDetailUserResponse {
+  birthDate: Date
+  name: string
+}

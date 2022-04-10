@@ -11,7 +11,7 @@ import { CreateMarkMonitorDto } from './dto/create-mark-monitor.dto'
 import { CreateMarkTeacherDto } from './dto/create-mark-teacher.dto'
 import { CreateMark } from './dto/create-mark.dto'
 import { PersonType } from './mark.enum'
-import { IMark, ITimeResponse } from './mark.interface'
+import { IDetailUserResponse, IMark, ITimeResponse } from './mark.interface'
 import {
   Marks,
   MarksDetail,
@@ -323,14 +323,17 @@ export class MarkService {
 
   async getScore(userId: number, studentId: number, type: PersonType) {
     let classId = 0
+    let finalStudentId = 0
     if (type === PersonType.Student) {
       classId = await (
         await this.classService.findClassByStudentId(userId)
       ).classId
+      finalStudentId = userId
     } else {
       classId = await (
         await this.classService.findClassByStudentId(studentId)
       ).classId
+      finalStudentId = studentId
     }
     const res = await firstValueFrom<ITimeResponse>(
       this.client.send({ role: 'time', cmd: 'get-active' }, {}),
@@ -348,7 +351,27 @@ export class MarkService {
         'Currently no rating-pages assigned with this classId.Please create new!',
       )
     }
-    return findClassMark
+    if (!findClassMark.markDetail.find((x) => x.studentId === finalStudentId)) {
+      throw new BadRequestException(
+        'Currently no mark assigned with this studentId.Please create new!',
+      )
+    }
+    const currentMark = findClassMark.markDetail.find(
+      (x) => x.studentId === finalStudentId,
+    )
+    const resDetailUser = await firstValueFrom<IDetailUserResponse>(
+      this.client.send({ role: 'detail-user', cmd: 'get-by-id' }, {}),
+    )
+    const year = res.startYear + res.endYear
+    const dataResponse = {
+      pointList: currentMark.pointList,
+      studentId: finalStudentId,
+      year: year,
+      semester: res.semester,
+      name: resDetailUser.name,
+      birthDate: resDetailUser.birthDate,
+    }
+    return dataResponse
   }
 
   public async calculationScore(id: number, type: PersonType) {
