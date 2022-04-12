@@ -5,7 +5,9 @@ import mongooseLeanVirtuals from 'mongoose-lean-virtuals'
 import { Document, SchemaTypes } from 'mongoose'
 import { AutoMap } from '@automapper/classes'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsArray, IsNumber } from '../../decorators/validators'
+import { IsArray, IsEnum, IsNumber } from '../../decorators/validators'
+import { ApproveStatus, MarkStatus } from './mark.enum'
+import { IsOptional } from 'class-validator'
 
 export type MarksDocument = Marks & Document
 
@@ -71,6 +73,30 @@ export class MarksDetail {
   @IsNumber({ notEmpty: true })
   totalPoint: number
 
+  @ApiProperty({
+    enum: MarkStatus,
+    default: MarkStatus.Drafted,
+  })
+  @IsOptional()
+  @IsEnum({ entity: MarkStatus })
+  studentStatus: MarkStatus
+
+  @ApiProperty({
+    enum: MarkStatus,
+    default: MarkStatus.Drafted,
+  })
+  @IsOptional()
+  @IsEnum({ entity: MarkStatus })
+  monitorStatus: MarkStatus
+
+  @ApiProperty({
+    enum: MarkStatus,
+    default: MarkStatus.Drafted,
+  })
+  @IsOptional()
+  @IsEnum({ entity: MarkStatus })
+  teacherStatus: MarkStatus
+
   @ApiPropertyOptional({
     type: [MarksDetailType],
     description: 'Required information for Students',
@@ -101,6 +127,10 @@ export class Marks extends BaseMongo {
   @Prop({ required: true })
   @AutoMap()
   endYear: number
+
+  @Prop({ required: true })
+  @AutoMap()
+  approvedStatus: ApproveStatus
 
   @Prop({ type: SchemaTypes.Array })
   @AutoMap()

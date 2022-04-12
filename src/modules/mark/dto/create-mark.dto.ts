@@ -5,7 +5,8 @@ import {
   OmitType,
 } from '@nestjs/swagger'
 import { Exclude } from 'class-transformer'
-import { IsArray, IsNumber } from '../../../decorators/validators'
+import { IsArray, IsEnum, IsNumber } from '../../../decorators/validators'
+import { MarkStatus } from '../mark.enum'
 import { Score } from '../mark.schema'
 
 export class UpdateScoreDto extends OmitType(Score, [
@@ -70,4 +71,11 @@ export class CreateMark {
     minSize: 1,
   })
   pointList: PointTypeForStudent[]
+
+  @ApiProperty({
+    enum: MarkStatus,
+    default: MarkStatus.Drafted,
+  })
+  @IsEnum({ entity: MarkStatus, notEmpty: true })
+  studentStatus: MarkStatus
 }

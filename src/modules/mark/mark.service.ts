@@ -1,6 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { InjectModel } from '@nestjs/mongoose'
+import moment from 'moment'
 import { Model } from 'mongoose'
 import { firstValueFrom } from 'rxjs'
 import { ClassService } from '../class/class.service'
@@ -8,7 +9,7 @@ import { RatingPagesService } from '../rating-pages/rating-pages.service'
 import { CreateMarkMonitorDto } from './dto/create-mark-monitor.dto'
 import { CreateMarkTeacherDto } from './dto/create-mark-teacher.dto'
 import { CreateMark } from './dto/create-mark.dto'
-import { PersonType } from './mark.enum'
+import { ApproveStatus, MarkStatus, PersonType } from './mark.enum'
 import { IDetailUserResponse, IMark, ITimeResponse } from './mark.interface'
 import { Marks, MarksDetail, MarksDocument } from './mark.schema'
 
@@ -27,6 +28,12 @@ export class MarkService {
     const res = await firstValueFrom<ITimeResponse>(
       this.client.send({ role: 'time', cmd: 'get-active' }, {}),
     )
+    const dateNow = new Date(moment().toDate())
+    const dateEnd = new Date(res.endTimeStudent)
+    const dateStart = new Date(res.startTimeStudent)
+    if (dateNow > dateEnd || dateNow < dateStart) {
+      throw new BadRequestException('Right now not time to mark the point')
+    }
     const findClassMark = await this.model.findOne({
       $and: [
         { classId: data.classId },
@@ -54,11 +61,15 @@ export class MarkService {
             pointList: dto.pointList,
           },
         ],
+        approvedStatus: ApproveStatus.Pending,
       }
       const newMarkDetail = {
         studentId: userID,
         totalPoint: 0,
         pointList: dto.pointList,
+        studentStatus: dto.studentStatus,
+        monitorStatus: MarkStatus.Drafted,
+        teacherStatus: MarkStatus.Drafted,
       }
       await this.compareScore(newMarkDetail)
       const updateDataSave = await this.model.findByIdAndUpdate(
@@ -75,10 +86,18 @@ export class MarkService {
       const newArray = findClassMark.markDetail.filter(
         (x) => x.studentId !== userID,
       )
+      if (currentMark.studentStatus === MarkStatus.Saved) {
+        throw new BadRequestException(
+          'This person mark point is saved and cant change',
+        )
+      }
       const newMarkDetail = {
         studentId: currentMark.studentId,
         totalPoint: 0,
         pointList: dto.pointList,
+        studentStatus: dto.studentStatus,
+        monitorStatus: currentMark.monitorStatus,
+        teacherStatus: currentMark.teacherStatus,
       }
       await this.compareScore(newMarkDetail)
       newArray.push(newMarkDetail)
@@ -88,6 +107,7 @@ export class MarkService {
         startYear: findClassMark.startYear,
         endYear: findClassMark.endYear,
         markDetail: newArray,
+        approvedStatus: findClassMark.approvedStatus,
       }
       const updateDataSave = await this.model.findByIdAndUpdate(
         findClassMark.id,
@@ -100,6 +120,9 @@ export class MarkService {
       studentId: userID,
       totalPoint: 0,
       pointList: dto.pointList,
+      studentStatus: dto.studentStatus,
+      monitorStatus: MarkStatus.Drafted,
+      teacherStatus: MarkStatus.Drafted,
     }
     await this.compareScore(newMarkDetail)
     const newArray = findClassMark.markDetail
@@ -110,6 +133,7 @@ export class MarkService {
       startYear: findClassMark.startYear,
       endYear: findClassMark.endYear,
       markDetail: newArray,
+      approvedStatus: findClassMark.approvedStatus,
     }
     const updateDataSave = await this.model.findByIdAndUpdate(
       findClassMark.id,
@@ -124,6 +148,12 @@ export class MarkService {
     const res = await firstValueFrom<ITimeResponse>(
       this.client.send({ role: 'time', cmd: 'get-active' }, {}),
     )
+    const dateNow = new Date(moment().toDate())
+    const dateEnd = new Date(res.endTimeHeadMaster)
+    const dateStart = new Date(res.startTimeHeadMaster)
+    if (dateNow > dateEnd || dateNow < dateStart) {
+      throw new BadRequestException('Right now not time to mark the point')
+    }
     const findClassMark = await this.model.findOne({
       $and: [
         { classId: data.classId },
@@ -149,13 +179,20 @@ export class MarkService {
             studentId: studentId,
             totalPoint: 0,
             pointList: dto.pointList,
+            studentStatus: MarkStatus.Drafted,
+            monitorStatus: MarkStatus.Drafted,
+            teacherStatus: dto.teacherStatus,
           },
         ],
+        approvedStatus: ApproveStatus.Pending,
       }
       const newMarkDetail = {
         studentId: studentId,
         totalPoint: 0,
         pointList: dto.pointList,
+        studentStatus: MarkStatus.Drafted,
+        monitorStatus: MarkStatus.Drafted,
+        teacherStatus: dto.teacherStatus,
       }
       await this.compareScore(newMarkDetail)
       const updateDataSave = await this.model.findByIdAndUpdate(
@@ -172,10 +209,18 @@ export class MarkService {
       const newArray = findClassMark.markDetail.filter(
         (x) => x.studentId !== studentId,
       )
+      if (currentMark.teacherStatus === MarkStatus.Saved) {
+        throw new BadRequestException(
+          'This person mark point is saved and cant change',
+        )
+      }
       const newMarkDetail = {
         studentId: currentMark.studentId,
         totalPoint: 0,
         pointList: dto.pointList,
+        studentStatus: currentMark.studentStatus,
+        monitorStatus: currentMark.monitorStatus,
+        teacherStatus: dto.teacherStatus,
       }
       await this.compareScore(newMarkDetail)
       newArray.push(newMarkDetail)
@@ -185,6 +230,7 @@ export class MarkService {
         startYear: findClassMark.startYear,
         endYear: findClassMark.endYear,
         markDetail: newArray,
+        approvedStatus: findClassMark.approvedStatus,
       }
       const updateDataSave = await this.model.findByIdAndUpdate(
         findClassMark.id,
@@ -197,6 +243,9 @@ export class MarkService {
       studentId: studentId,
       totalPoint: 0,
       pointList: dto.pointList,
+      studentStatus: MarkStatus.Drafted,
+      monitorStatus: MarkStatus.Drafted,
+      teacherStatus: dto.teacherStatus,
     }
     const newArray = findClassMark.markDetail
     await this.compareScore(newMarkDetail)
@@ -207,6 +256,7 @@ export class MarkService {
       startYear: findClassMark.startYear,
       endYear: findClassMark.endYear,
       markDetail: newArray,
+      approvedStatus: findClassMark.approvedStatus,
     }
     const updateDataSave = await this.model.findByIdAndUpdate(
       findClassMark.id,
@@ -221,6 +271,12 @@ export class MarkService {
     const res = await firstValueFrom<ITimeResponse>(
       this.client.send({ role: 'time', cmd: 'get-active' }, {}),
     )
+    const dateNow = new Date(moment().toDate())
+    const dateEnd = new Date(res.endTimeMonitor)
+    const dateStart = new Date(res.startTimeMonitor)
+    if (dateNow > dateEnd || dateNow < dateStart) {
+      throw new BadRequestException('Right now not time to mark the point')
+    }
     const findClassMark = await this.model.findOne({
       $and: [
         { classId: data.classId },
@@ -246,13 +302,20 @@ export class MarkService {
             studentId: studentId,
             totalPoint: 0,
             pointList: dto.pointList,
+            studentStatus: MarkStatus.Drafted,
+            teacherStatus: MarkStatus.Drafted,
+            monitorStatus: dto.monitorStatus,
           },
         ],
+        approvedStatus: ApproveStatus.Pending,
       }
       const newMarkDetail = {
         studentId: studentId,
         totalPoint: 0,
         pointList: dto.pointList,
+        studentStatus: MarkStatus.Drafted,
+        teacherStatus: MarkStatus.Drafted,
+        monitorStatus: dto.monitorStatus,
       }
       await this.compareScore(newMarkDetail)
       const updateDataSave = await this.model.findByIdAndUpdate(
@@ -273,6 +336,9 @@ export class MarkService {
         studentId: currentMark.studentId,
         totalPoint: 0,
         pointList: dto.pointList,
+        studentStatus: currentMark.studentStatus,
+        teacherStatus: currentMark.teacherStatus,
+        monitorStatus: dto.monitorStatus,
       }
       await this.compareScore(newMarkDetail)
       newArray.push(newMarkDetail)
@@ -282,6 +348,7 @@ export class MarkService {
         startYear: findClassMark.startYear,
         endYear: findClassMark.endYear,
         markDetail: newArray,
+        approvedStatus: findClassMark.approvedStatus,
       }
       const updateDataSave = await this.model.findByIdAndUpdate(
         findClassMark.id,
@@ -294,6 +361,9 @@ export class MarkService {
       studentId: studentId,
       totalPoint: 0,
       pointList: dto.pointList,
+      studentStatus: MarkStatus.Drafted,
+      teacherStatus: MarkStatus.Drafted,
+      monitorStatus: dto.monitorStatus,
     }
     const newArray = findClassMark.markDetail
     await this.compareScore(newMarkDetail)
@@ -304,6 +374,7 @@ export class MarkService {
       startYear: findClassMark.startYear,
       endYear: findClassMark.endYear,
       markDetail: newArray,
+      approvedStatus: findClassMark.approvedStatus,
     }
     const updateDataSave = await this.model.findByIdAndUpdate(
       findClassMark.id,
