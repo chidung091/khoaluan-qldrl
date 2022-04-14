@@ -7,5 +7,5 @@ spec:
     app: thl-khoaluan-qldrl
   ports:
   - protocol: TCP
-    port: 3003
+    port: 3004
   type: LoadBalancer
