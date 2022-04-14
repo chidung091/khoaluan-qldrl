@@ -6,7 +6,7 @@ import { AppModule } from './app.module'
 import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { HttpExceptionFilter } from './filters'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import { MICROSERVICE_HOST, PORT } from './config/secrets'
+import { MICROSERVICE_HOST, MONGO_URI, PORT } from './config/secrets'
 import { Transport } from '@nestjs/microservices'
 
 async function bootstrap() {
@@ -28,6 +28,7 @@ async function bootstrap() {
       port: 4004,
     },
   })
+  console.log(MONGO_URI)
   setUpSwagger(app)
   app.enableCors()
   await app.startAllMicroservices()

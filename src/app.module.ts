@@ -11,7 +11,7 @@ import { MarkModule } from './modules/mark/mark.module'
 
 @Module({
   imports: [
-    MongooseModule.forRoot(MONGO_URI),
+    MongooseModule.forRoot(MONGO_URI, { retryAttempts: 1 }),
     AutomapperModule.forRoot({
       options: [{ name: 'mapper', pluginInitializer: classes }],
       singular: true,
