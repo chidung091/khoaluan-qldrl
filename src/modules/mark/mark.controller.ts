@@ -15,7 +15,6 @@ import { Role } from 'src/guards/guards.enum'
 import { CreateMarkMonitorDto } from './dto/create-mark-monitor.dto'
 import { CreateMarkTeacherDto } from './dto/create-mark-teacher.dto'
 import { CreateMark } from './dto/create-mark.dto'
-import { GetMarkDto } from './dto/get-mark.dto'
 import { GetScoreMarkDto } from './dto/get-score-mark.dto'
 import { MarkService } from './mark.service'
 
