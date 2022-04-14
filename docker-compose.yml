@@ -4,7 +4,7 @@ services:
   point-rating-system:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./docker/Dockerfile
     container_name: point-rating-system
     ports:
       - 3004:3004
