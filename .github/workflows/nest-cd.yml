@@ -33,6 +33,6 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            # cd ~/khoaluan-qldrl
-            # sudo git pull origin master
-            # sudo yarn start:up:prod
+            cd ~/khoaluan-qldrl
+            sudo git pull origin master
+            sudo yarn start:up:prod
