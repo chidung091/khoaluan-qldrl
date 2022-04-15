@@ -21,4 +21,8 @@ spec:
             cpu: "500m"
         ports:
         - containerPort: 3004
+        envFrom:
+          - secretRef:
+              name: thl-khoaluan-qldrl-secret
+              optional: false
 
