@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: thl-khoaluan-qldrl
+  name: thl-khoaluan-qldrl-svc
 spec:
   selector:
     app: thl-khoaluan-qldrl
