@@ -42,7 +42,7 @@ export class MarkController {
 
   @Post()
   @UseGuards(AuthGuard, RoleGuard)
-  @Roles(Role.Student)
+  @Roles(Role.Student, Role.Monitor)
   @ApiOperation({
     operationId: 'create-Mark-Student',
     description: 'create a Rating Pages',
