@@ -181,7 +181,7 @@ export class ClassService {
   }
 
   async findStudentAndMonitor(dto: FindHeadMasterStudentListIdDto) {
-    const data = await this.model.find({
+    const data = await this.model.findOne({
       $and: [
         { 'students.headMasterId': dto.headMasterId },
         { 'students.startYear': dto.startYear },
@@ -189,30 +189,25 @@ export class ClassService {
         { 'students.semester': dto.semester },
       ],
     })
-    const dataResponse = []
+    let dataRes = {}
+    const dataStudent = data.students
+    const dataClass = data.classId
     await Promise.all(
-      data.map(async (arrayItem) => {
-        const dataStudent = arrayItem.students
-        const dataClass = arrayItem.classId
-        await Promise.all(
-          dataStudent.map(async (arrayI) => {
-            const dataStudentsIDs = arrayI.studentsIds
-            const oldMonitorId = arrayI.monitorId
-            const findId = dataStudentsIDs.find((x) => x === dto.studentId)
-            if (!findId) {
-              return dataResponse
-            }
-            const data = {
-              id: findId,
-              classId: dataClass,
-              oldMonitorId: oldMonitorId,
-            }
-            dataResponse.push(data)
-          }),
-        )
+      dataStudent.map(async (arrayI) => {
+        const dataStudentsIDs = arrayI.studentsIds
+        const oldMonitorId = arrayI.monitorId
+        const findId = dataStudentsIDs.find((x) => x === dto.studentId)
+        if (!findId) {
+          return 0
+        }
+        dataRes = {
+          id: findId,
+          classId: dataClass,
+          oldMonitorId: oldMonitorId,
+        }
       }),
     )
-    return dataResponse
+    return dataRes
   }
 
   async updateStudentAndMonitor(dto: FindHeadMasterStudentListIdDto) {
@@ -225,7 +220,6 @@ export class ClassService {
       ],
     })
     const dataNew = data
-    console.log(dataNew.students)
     const dataStudent = data.students
     await Promise.all(
       dataStudent.map(async (arrayI) => {
@@ -234,8 +228,6 @@ export class ClassService {
           (x) => x.monitorId === oldMonitorId,
         )
         const newArray = dataStudent.filter((x) => x.monitorId !== oldMonitorId)
-        console.log(currentMark)
-        console.log(newArray)
         currentMark.monitorId = dto.studentId
         newArray.push(currentMark)
         dataNew.students = newArray
