@@ -530,16 +530,16 @@ export class MarkService {
       this.client.send({ role: 'time', cmd: 'get-active' }, {}),
     )
     const data = await this.ratingPagesService.getRatingPagesWithSemesterInfo(
-      semester,
-      startYear,
-      endYear,
+      res.semester,
+      res.startYear,
+      res.endYear,
     )
     const findClassMark = await this.model.findOne({
       $and: [
         { classId: dataClass.classId },
-        { startYear: startYear },
-        { endYear: endYear },
-        { semester: semester },
+        { startYear: res.startYear },
+        { endYear: res.endYear },
+        { semester: res.semester },
       ],
     })
     if (!findClassMark) {

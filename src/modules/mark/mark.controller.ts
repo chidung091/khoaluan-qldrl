@@ -51,6 +51,17 @@ export class MarkController {
     return this.markService.createMark(req.user.userID, dto)
   }
 
+  @Post('/history')
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(Role.Student, Role.Monitor)
+  @ApiOperation({
+    operationId: 'get-History-Mark-Student',
+    description: 'get a History Mark',
+  })
+  async getHistoryMark(@Req() req) {
+    return this.markService.getHistoryMark(req.user.userID)
+  }
+
   @Post('/teacher/:studentId')
   @UseGuards(AuthGuard, RoleGuard)
   @Roles(Role.Teacher)
