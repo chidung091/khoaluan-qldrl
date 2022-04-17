@@ -518,6 +518,64 @@ export class MarkService {
     return 0
   }
 
+  public async calculationScoreWithoutCurrentSemesterInfo(
+    id: number,
+    startYear: number,
+    endYear: number,
+    semester: number,
+    type: PersonType,
+  ) {
+    const dataClass = await this.classService.findClassByStudentId(id)
+    const res = await firstValueFrom<ITimeResponse>(
+      this.client.send({ role: 'time', cmd: 'get-active' }, {}),
+    )
+    const data = await this.ratingPagesService.getRatingPagesWithSemesterInfo(
+      semester,
+      startYear,
+      endYear,
+    )
+    const findClassMark = await this.model.findOne({
+      $and: [
+        { classId: dataClass.classId },
+        { startYear: startYear },
+        { endYear: endYear },
+        { semester: semester },
+      ],
+    })
+    if (!findClassMark) {
+      return 0
+    }
+    if (findClassMark.markDetail.find((x) => x.studentId === id)) {
+      const currentMark = findClassMark.markDetail.find(
+        (x) => x.studentId === id,
+      )
+      let totalScore = 0
+      await Promise.all(
+        currentMark.pointList.map(async (point) => {
+          await Promise.all(
+            point.subType.map(async (subPoint) => {
+              await Promise.all(
+                subPoint.subTypeScore.map(async (subTypePoint) => {
+                  if (type === PersonType.Student) {
+                    totalScore += subTypePoint.studentScore
+                  }
+                  if (type === PersonType.Monitor) {
+                    totalScore += subTypePoint.monitorScore
+                  }
+                  if (type === PersonType.Teacher) {
+                    totalScore += subTypePoint.teacherScore
+                  }
+                }),
+              )
+            }),
+          )
+        }),
+      )
+      return totalScore
+    }
+    return 0
+  }
+
   private async compareScore(dto: MarksDetail) {
     const res = await firstValueFrom<ITimeResponse>(
       this.client.send({ role: 'time', cmd: 'get-active' }, {}),
@@ -590,6 +648,64 @@ export class MarkService {
         )
       }),
     )
+  }
+
+  async getHistoryMark(userId: number) {
+    const data = await this.classService.findClassByStudentId(userId)
+    const findClassMark = await this.model.find({
+      classId: data.classId,
+    })
+    const dataResponse = []
+    if (!findClassMark) {
+      throw new BadRequestException(`Can't findClassMark`)
+    }
+    await Promise.all(
+      findClassMark.map(async (singleClass) => {
+        const startYear = singleClass.startYear
+        const endYear = singleClass.endYear
+        const semester = singleClass.semester
+        await Promise.all(
+          singleClass.markDetail.map(async (singleMarkDetail) => {
+            if (singleMarkDetail.studentId) {
+              const totalStudentPoint =
+                await this.calculationScoreWithoutCurrentSemesterInfo(
+                  userId,
+                  startYear,
+                  endYear,
+                  semester,
+                  PersonType.Student,
+                )
+              const totalTeacherPoint =
+                await this.calculationScoreWithoutCurrentSemesterInfo(
+                  userId,
+                  startYear,
+                  endYear,
+                  semester,
+                  PersonType.Teacher,
+                )
+              const totalMonitorPoint =
+                await this.calculationScoreWithoutCurrentSemesterInfo(
+                  userId,
+                  startYear,
+                  endYear,
+                  semester,
+                  PersonType.Monitor,
+                )
+              const dataRes = {
+                startYear: startYear,
+                endYear: endYear,
+                semester: semester,
+                totalStudentPoint: totalStudentPoint,
+                totalMonitorPoint: totalMonitorPoint,
+                totalTeacherPoint: totalTeacherPoint,
+              }
+              dataResponse.push(dataRes)
+            }
+          }),
+        )
+      }),
+    )
+    return dataResponse
   }
 
   compareSubScore(markScore: number, ratingScore: number) {

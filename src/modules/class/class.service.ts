@@ -180,6 +180,75 @@ export class ClassService {
     return dataResponse
   }
 
+  async findStudentAndMonitor(dto: FindHeadMasterStudentListIdDto) {
+    const data = await this.model.find({
+      $and: [
+        { 'students.headMasterId': dto.headMasterId },
+        { 'students.startYear': dto.startYear },
+        { 'students.endYear': dto.endYear },
+        { 'students.semester': dto.semester },
+      ],
+    })
+    const dataResponse = []
+    await Promise.all(
+      data.map(async (arrayItem) => {
+        const dataStudent = arrayItem.students
+        const dataClass = arrayItem.classId
+        await Promise.all(
+          dataStudent.map(async (arrayI) => {
+            const dataStudentsIDs = arrayI.studentsIds
+            const oldMonitorId = arrayI.monitorId
+            const findId = dataStudentsIDs.find((x) => x === dto.studentId)
+            if (!findId) {
+              return dataResponse
+            }
+            const data = {
+              id: findId,
+              classId: dataClass,
+              oldMonitorId: oldMonitorId,
+            }
+            dataResponse.push(data)
+          }),
+        )
+      }),
+    )
+    return dataResponse
+  }
+
+  async updateStudentAndMonitor(dto: FindHeadMasterStudentListIdDto) {
+    const data = await this.model.findOne({
+      $and: [
+        { 'students.headMasterId': dto.headMasterId },
+        { 'students.startYear': dto.startYear },
+        { 'students.endYear': dto.endYear },
+        { 'students.semester': dto.semester },
+      ],
+    })
+    const dataNew = data
+    console.log(dataNew.students)
+    const dataStudent = data.students
+    await Promise.all(
+      dataStudent.map(async (arrayI) => {
+        const oldMonitorId = arrayI.monitorId
+        const currentMark = dataStudent.find(
+          (x) => x.monitorId === oldMonitorId,
+        )
+        const newArray = dataStudent.filter((x) => x.monitorId !== oldMonitorId)
+        console.log(currentMark)
+        console.log(newArray)
+        currentMark.monitorId = dto.studentId
+        newArray.push(currentMark)
+        dataNew.students = newArray
+      }),
+    )
+    const updateDataSave = await this.model.findByIdAndUpdate(
+      data.id,
+      dataNew,
+      { new: true },
+    )
+    return updateDataSave
+  }
+
   async findStudentListByHeadMasterSearch(dto: FindHeadMasterStudentListIdDto) {
     const data = await this.model.find({
       $and: [

@@ -51,6 +51,20 @@ export class ClassController {
     return this.classService.findStudentListByHeadMasterSearch(dto)
   }
 
+  @MessagePattern({ role: 'class', cmd: 'get-student-monitor-headmaster' })
+  async getStudentMonitorHeadMaster(
+    @Body() dto: FindHeadMasterStudentListIdDto,
+  ) {
+    return this.classService.findStudentAndMonitor(dto)
+  }
+
+  @MessagePattern({ role: 'class', cmd: 'update-student-monitor-headmaster' })
+  async updateStudentMonitorHeadMaster(
+    @Body() dto: FindHeadMasterStudentListIdDto,
+  ) {
+    return this.classService.updateStudentAndMonitor(dto)
+  }
+
   @MessagePattern({ role: 'class', cmd: 'get-student-list-monitor' })
   async getStudentMonitor(@Body() dto: FindStudentListByMonitorWithId) {
     return this.classService.findStudentListByMonitorSearch(dto)
