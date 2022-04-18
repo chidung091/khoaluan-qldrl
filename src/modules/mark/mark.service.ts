@@ -554,6 +554,9 @@ export class MarkService {
         (x) => x.studentId === id,
       )
       let totalScore = 0
+      if (!currentMark.pointList) {
+        return 0
+      }
       await Promise.all(
         currentMark.pointList.map(async (point) => {
           await Promise.all(
