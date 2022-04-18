@@ -34,5 +34,6 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd ~/khoaluan-qldrl
+            sudo docker system prune --force
             sudo git pull origin master
             sudo yarn start:up:prod

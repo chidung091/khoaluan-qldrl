@@ -3,6 +3,7 @@ import { ClientProxy } from '@nestjs/microservices'
 import { InjectModel } from '@nestjs/mongoose'
 import moment from 'moment'
 import { Model } from 'mongoose'
+import { start } from 'repl'
 import { firstValueFrom } from 'rxjs'
 import { ClassService } from '../class/class.service'
 import { RatingPagesService } from '../rating-pages/rating-pages.service'
@@ -537,9 +538,9 @@ export class MarkService {
     const findClassMark = await this.model.findOne({
       $and: [
         { classId: dataClass.classId },
-        { startYear: res.startYear },
-        { endYear: res.endYear },
-        { semester: res.semester },
+        { startYear: startYear },
+        { endYear: endYear },
+        { semester: semester },
       ],
     })
     if (!findClassMark) {

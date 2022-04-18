@@ -17,15 +17,15 @@ export class Score {
   idSubTypeScore: number
 
   @ApiProperty()
-  @IsNumber({ notEmpty: false })
+  @IsNumber({ notEmpty: false, defaultValue: 0 })
   studentScore: number
 
   @ApiProperty()
-  @IsNumber({ notEmpty: false })
+  @IsNumber({ notEmpty: false, defaultValue: 0 })
   monitorScore: number
 
   @ApiProperty()
-  @IsNumber({ notEmpty: false })
+  @IsNumber({ notEmpty: false, defaultValue: 0 })
   teacherScore: number
 }
 export class PointList {
