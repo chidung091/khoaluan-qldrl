@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { ApiPropertyOptional } from '@nestjs/swagger'
 import { AutoMap } from '@automapper/classes'
 import { BaseDto } from '../../../common/dto'
 import { PointFrameList } from '../point-frame.schema'

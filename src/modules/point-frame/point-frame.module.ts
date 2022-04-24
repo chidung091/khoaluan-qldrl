@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { PointFrame, PointFrameSchema } from './point-frame.schema'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { BE_AUTH_SERVICE } from 'src/config/secrets'
+import { PointFrameMapper } from './point-frame.mapper'
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { BE_AUTH_SERVICE } from 'src/config/secrets'
       },
     ]),
   ],
-  providers: [PointFrameService],
+  providers: [PointFrameService, PointFrameMapper],
   controllers: [PointFrameController],
 })
 export class PointFrameModule {}
