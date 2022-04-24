@@ -13,8 +13,8 @@ export class PointFrameMapper extends AutomapperProfile {
   mapProfile() {
     return (mapper: Mapper) => {
       mapper.createMap(PointFrame, PointFrameResponse).forMember(
-        (d) => d.list,
-        mapFrom((s) => s.list),
+        (d) => d,
+        mapFrom((s) => s),
       )
     }
   }

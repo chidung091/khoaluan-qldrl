@@ -1,19 +1,17 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { IsOptional } from 'class-validator'
-import { IsArray, IsNumber } from 'src/decorators/validators'
-import { PointFrameList } from '../point-frame.schema'
+import { IsArray, IsNumber, IsString } from 'src/decorators/validators'
 
 export class CreatePointFrameDto {
-  @IsArray({ nestedType: PointFrameList, nestedValidate: true })
-  @ApiPropertyOptional({
-    type: [PointFrameList],
-    description: 'Required information for Students',
-  })
-  @IsArray({
-    nestedType: PointFrameList,
-    nestedValidate: true,
-    notEmpty: true,
-    minSize: 1,
-  })
-  list: PointFrameList[]
+  @ApiProperty({ example: 1 })
+  @IsString({ notEmpty: false })
+  stringPoint: string
+
+  @ApiProperty({ example: 0 })
+  @IsNumber({ negative: false })
+  minPoint: number
+
+  @ApiProperty({ example: 30 })
+  @IsNumber({ negative: false })
+  maxPoint: number
 }
