@@ -8,6 +8,7 @@ import { ClassModule } from './modules/class/class.module'
 import { RatingPagesModule } from './modules/rating-pages/rating-pages.module'
 import { UserMiddleware } from './middlewares/user.middleware'
 import { MarkModule } from './modules/mark/mark.module'
+import { PointFrameModule } from './modules/point-frame/point-frame.module'
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { MarkModule } from './modules/mark/mark.module'
     ClassModule,
     RatingPagesModule,
     MarkModule,
+    PointFrameModule,
   ],
 })
 export class AppModule {
