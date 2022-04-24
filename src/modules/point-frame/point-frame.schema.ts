@@ -5,7 +5,7 @@ import mongooseLeanVirtuals from 'mongoose-lean-virtuals'
 import { Document, SchemaTypes } from 'mongoose'
 import { ApiProperty } from '@nestjs/swagger'
 import { AutoMap } from '@automapper/classes'
-import { IsNumber, IsArray, IsString } from '../../decorators/validators'
+import { IsNumber, IsString } from '../../decorators/validators'
 
 export type PointFrameDocument = PointFrame & Document
 
@@ -14,11 +14,11 @@ export class PointFrameList {
   @IsString({ notEmpty: false })
   stringPoint: string
 
-  @ApiProperty({ example: 60000002 })
+  @ApiProperty({ example: 0 })
   @IsNumber({ negative: false })
   minPoint: number
 
-  @ApiProperty({ example: 675105036 })
+  @ApiProperty({ example: 30 })
   @IsNumber({ negative: false })
   maxPoint: number
 }
